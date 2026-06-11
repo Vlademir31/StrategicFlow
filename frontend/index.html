@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Flow - Plataforma de Consultoria Premium</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link rel="stylesheet" href="https://unpkg.com/lucide-static/font/lucide.css">
+
+   
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+
+        <!-- Ícone que vira botão -->
+        <div id="menu-toggle" class="sidebar-logo">
+            <i class="fas fa-chart-line"></i>
+            <span class="sidebar-title-text">Strategic Flow</span>
+        </div>
+
+        <p class="sidebar-subtitle">Plataforma de Consultoria Premium</p>
+    </div>
+        
+        <nav class="sidebar-nav">
+
+    <!-- PAINEL PRINCIPAL -->
+    <div class="menu-section fixed-top">
+        <a href="#dashboard" class="nav-item active" data-section="dashboard">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard KPIs</span>
+        </a>
+    </div>
+
+    <!-- 1. COMERCIAL & ADMINISTRATIVO -->
+    <div class="menu-category">
+        <div class="category-header">
+            <i class="fas fa-briefcase"></i>
+            <span>Comercial & Administrativo</span>
+        </div>
+        <div class="category-items">
+            <a href="#crm" class="nav-item" data-section="crm"><i class="fas fa-users"></i><span>CRM + Clientes</span></a>
+            <a href="#portal" class="nav-item" data-section="portal"><i class="fas fa-user-friends"></i><span>Client Portal</span></a>
+            <a href="#workforce" class="nav-item" data-section="workforce"><i class="fas fa-hard-hat"></i><span>Workforce</span></a>
+        </div>
+    </div>
+
+    <!-- 2. EXECUÇÃO DE PROJETOS -->
+    <div class="menu-category">
+        <div class="category-header">
+            <i class="fas fa-bullseye"></i>
+            <span>Execução de Projetos</span>
+        </div>
+        <div class="category-items">
+            <a href="#projects" class="nav-item" data-section="projects"><i class="fas fa-folder-open"></i><span>Gestão Projetos</span></a>
+            <a href="#diagnostics" class="nav-item" data-section="diagnostics"><i class="fas fa-stethoscope"></i><span>Diagnósticos</span></a>
+            <a href="#templates" class="nav-item" data-section="templates"><i class="fas fa-file-alt"></i><span>Templates</span></a>
+            <a href="#reports" class="nav-item" data-section="reports"><i class="fas fa-file-pdf"></i><span>Relatórios</span></a>
+            <a href="#pdca" class="nav-item" data-section="pdca"><i class="fas fa-sync-alt"></i><span>PDCA Cycle</span></a>
+        </div>
+    </div>
+
+    <!-- 3. PROCESSOS & MELHORIA (LEAN) -->
+    <div class="menu-category">
+        <div class="category-header">
+            <i class="fas fa-cogs"></i>
+            <span>Processos & Melhoria (Lean)</span>
+        </div>
+        <div class="category-items">
+            <a href="#workflow" class="nav-item" data-section="workflow"><i class="fas fa-project-diagram"></i><span>Workflow & Governança</span></a>
+            <a href="#bpmn" class="nav-item" data-section="bpmn"><i class="fas fa-sitemap"></i><span>BPMN Mapeamento</span></a>
+            <a href="#mapping" class="nav-item" data-section="mapping"><i class="fas fa-map"></i><span>VSM / Swimlane</span></a>
+            <a href="#kaizen" class="nav-item" data-section="kaizen"><i class="fas fa-rocket"></i><span>Kaizen Improvement</span></a>
+            <a href="#5s" class="nav-item" data-section="5s"><i class="fas fa-check-circle"></i><span>5S Digital</span></a>
+            <a href="#lean" class="nav-item" data-section="lean"><i class="fas fa-tasks"></i><span>Lean Monitoramento</span></a>
+            <a href="#sixsigma" class="nav-item" data-section="sixsigma"><i class="fas fa-chart-bar"></i><span>Six Sigma DMAIC</span></a>
+            <a href="#quality" class="nav-item" data-section="quality"><i class="fas fa-clipboard-check"></i><span>Qualidade</span></a>
+        </div>
+    </div>
+
+    <!-- 4. TECNOLOGIA & INTELIGÊNCIA -->
+    <div class="menu-category">
+        <div class="category-header">
+            <i class="fas fa-brain"></i>
+            <span>Tecnologia & Inteligência</span>
+        </div>
+        <div class="category-items">
+            <a href="#bi" class="nav-item" data-section="bi"><i class="fas fa-chart-area"></i><span>BI Consultoria</span></a>
+            <a href="#ai" class="nav-item" data-section="ai"><i class="fas fa-brain"></i><span>IA / ML</span></a>
+            <a href="#automation" class="nav-item" data-section="automation"><i class="fas fa-bolt"></i><span>Automação</span></a>
+            <a href="#integration" class="nav-item" data-section="integration"><i class="fas fa-plug"></i><span>Integração</span></a>
+            <a href="#notifications" class="nav-item" data-section="notifications"><i class="fas fa-bell"></i><span>Notificações</span></a>
+            <a href="#mobile" class="nav-item" data-section="mobile"><i class="fas fa-mobile-alt"></i><span>Mobile App</span></a>
+            <a href="#security" class="nav-item" data-section="security"><i class="fas fa-shield-alt"></i><span>Segurança</span></a>
+            <a href="#audit" class="nav-item" data-section="audit"><i class="fas fa-history"></i><span>Auditoria</span></a>
+        </div>
+    </div>
+
+</nav>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <h2 id="page-title">Dashboard KPIs</h2>
+                <div class="connection-status">
+                    <span id="connection-indicator" class="status-indicator disconnected"></span>
+                    <span id="connection-text">Desconectado</span>
+                    <button id="connect-btn" class="btn-small">Connect API</button>
+                </div>
+            </div>
+    
+    <div class="user-info">
+        <img src="https://ui-avatars.com/api/?name=Vlademir+Oliveira&background=0D8ABC&color=fff" alt="User">
+        <span>Vlademir Oliveira</span>
+        <span class="user-role">Consultor Premium</span>
+        <button id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+
+    </div>
+</div>
+
+
+        <!-- 1. DASHBOARD -->
+               <!-- 1. DASHBOARD -->
+        <div id="dashboard" class="section active">
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-line"></i> Desempenho Operacional em Tempo Real</h3>
+                <!-- Alterado de style inline para a classe CSS dedicada -->
+                <div class="chart-wrapper">
+                    <canvas id="realtime-chart"></canvas>
+                </div>
+            </div>
+
+
+            <div class="dashboard-grid">
+                <div class="kpi-card" data-kpi="cycleTime">
+                    <div class="kpi-header"><i class="fas fa-clock kpi-icon red"></i><span class="kpi-title">Cycle Time</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-cycle-time">--</span><span class="trend" id="trend-cycle-time">--</span></div>
+                    <div class="kpi-target">Target: 20h</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-cycle-time">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="otif">
+                    <div class="kpi-header"><i class="fas fa-check-circle kpi-icon green"></i><span class="kpi-title">OTIF</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-otif">--</span><span class="trend" id="trend-otif">--</span></div>
+                    <div class="kpi-target">Target: 95%</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-otif">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="efficiency">
+                    <div class="kpi-header"><i class="fas fa-chart-line kpi-icon blue"></i><span class="kpi-title">Eficiência</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-efficiency">--</span><span class="trend" id="trend-efficiency">--</span></div>
+                    <div class="kpi-target">Target: 95%</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-efficiency">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="rejection">
+                    <div class="kpi-header"><i class="fas fa-times-circle kpi-icon orange"></i><span class="kpi-title">Rejeição</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-rejection">--</span><span class="trend" id="trend-rejection">--</span></div>
+                    <div class="kpi-target">Target: 2%</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-rejection">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="roi">
+                    <div class="kpi-header"><i class="fas fa-dollar-sign kpi-icon purple"></i><span class="kpi-title">ROI Projeto</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-roi">--</span><span class="trend" id="trend-roi">--</span></div>
+                    <div class="kpi-target">Target: 200%</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-roi">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="success">
+                    <div class="kpi-header"><i class="fas fa-star kpi-icon blue"></i><span class="kpi-title">Success Rate</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-success">--</span><span class="trend" id="trend-success">--</span></div>
+                    <div class="kpi-target">Target: 85%</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-success">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="nps">
+                    <div class="kpi-header"><i class="fas fa-heart kpi-icon red"></i><span class="kpi-title">NPS Geral</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-nps">--</span><span class="trend" id="trend-nps">--</span></div>
+                    <div class="kpi-target">Target: 75</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-nps">Waiting...</span></span></div>
+                </div>
+                <div class="kpi-card" data-kpi="throughput">
+                    <div class="kpi-header"><i class="fas fa-bolt kpi-icon orange"></i><span class="kpi-title">Throughput</span></div>
+                    <div class="kpi-value"><span class="value" id="kpi-throughput">--</span><span class="trend" id="trend-throughput">--</span></div>
+                    <div class="kpi-target">Target: 1200</div>
+                    <div class="kpi-realtime"><i class="fas fa-wave-square"></i><span>Atualizado: <span id="realtime-throughput">Waiting...</span></span></div>
+                </div>
+            </div>
+
+            <div class="areas-criticas">
+                <h3><i class="fas fa-exclamation-triangle"></i> Áreas Críticas Sob Observação</h3>
+                <div class="areas-grid" id="areas-list">
+                    <div class="area-card priority-3">
+                        <div class="area-header"><i class="fas fa-industry"></i><span class="priority-badge">Prioridade Alta</span></div>
+                        <h4>Gargalo de Montagem</h4>
+                        <p>Linha de produção operando acima da capacidade.</p>
+                        <div class="area-status"><span class="status developing">Sob Tratativa</span></div>
+                    </div>
+                    <div class="area-card priority-4">
+                        <div class="area-header"><i class="fas fa-truck"></i><span class="priority-badge">Prioridade Média</span></div>
+                        <h4>Janela de Carga Logística</h4>
+                        <p>Inconsistência nos horários de coleta externa.</p>
+                        <div class="area-status"><span class="status active">Acompanhando</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. WORKFLOW -->
+        <div id="workflow" class="section">
+            <div class="card">
+                <h3><i class="fas fa-project-diagram"></i> Workflow & Governança</h3>
+                <p>Aprovações multi-nível com SLA e escalonamento automático.</p>
+                <div id="workflow-list" class="workflow-steps"></div>
+            </div>
+        </div>
+
+        <!-- 3. BPMN -->
+        <div id="bpmn" class="section">
+            <div class="card">
+                <h3><i class="fas fa-sitemap"></i> BPMN Mapeamento</h3>
+                <p>Editor de diagramas BPMN 2.0.</p>
+                <div class="bpmn-editor-container">
+                    <div class="bpmn-toolbox" id="bpmn-toolbox"></div>
+                    <div class="bpmn-canvas" id="bpmn-canvas"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. PDCA -->
+        <div id="pdca" class="section">
+            <div class="card">
+                <h3><i class="fas fa-sync-alt"></i> PDCA Cycle</h3>
+                <p>Painel de Melhoria Contínua (Deming).</p>
+                <div class="pdca-board" id="pdca-board"></div>
+            </div>
+        </div>
+
+        <!-- 5. KAIZEN -->
+        <div id="kaizen" class="section">
+            <div class="card">
+                <h3><i class="fas fa-rocket"></i> Kaizen Improvement</h3>
+                <p>Kaizen Board - Eliminação rápida de desvios.</p>
+                <div class="kaizen-board" id="kaizen-board"></div>
+            </div>
+        </div>
+
+        <!-- 6. 5S -->
+        <div id="5s" class="section">
+            <div class="card">
+                <h3><i class="fas fa-check-circle"></i> 5S Digital</h3>
+                <p>Auditoria e Senso 5S por departamento.</p>
+                <div class="dashboard-grid" id="5s-metrics"></div>
+            </div>
+        </div>
+
+        <!-- 7. LEAN -->
+        <div id="lean" class="section">
+            <div class="card">
+                <h3><i class="fas fa-tasks"></i> Lean Monitoramento</h3>
+                <p>Desperdícios Lean (DOWNTIME).</p>
+                <div class="table-container">
+                    <table class="interactive-table" id="lean-table"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. SIX SIGMA -->
+        <div id="sixsigma" class="section">
+            <div class="card">
+                <h3><i class="fas fa-chart-bar"></i> Six Sigma DMAIC</h3>
+                <p>Projetos Lean Six Sigma estatísticos.</p>
+                <div class="form-grid" id="sixsigma-metrics"></div>
+            </div>
+        </div>
+
+        <!-- 9. CRM -->
+        <div id="crm" class="section">
+            <div class="card">
+                <h3><i class="fas fa-users"></i> CRM + Clientes</h3>
+                <p>Gestão de Contas e NPS.</p>
+                <div class="table-container">
+                    <table class="interactive-table" id="crm-table"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. PROJETOS -->
+        <div id="projects" class="section">
+            <div class="card">
+                <h3><i class="fas fa-folder-open"></i> Gestão Projetos</h3>
+                <p>Portfólio de Projetos (EVM, Sprints).</p>
+                <div class="table-container">
+                    <table class="interactive-table" id="projects-table"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11-24. OUTRAS PAGES -->
+        <div id="diagnostics" class="section"><div class="card"><h3><i class="fas fa-stethoscope"></i> Diagnósticos</h3><p>Baseline, Gap, Recommendations</p></div></div>
+        <div id="reports" class="section"><div class="card"><h3><i class="fas fa-file-pdf"></i> Relatórios</h3><p>PDF/Excel Executivos</p></div></div>
+        <div id="mapping" class="section"><div class="card"><h3><i class="fas fa-map"></i> VSM/Swimlane</h3><p>Mapeamento Avançado</p></div></div>
+        <div id="templates" class="section"><div class="card"><h3><i class="fas fa-file-alt"></i> Templates</h3><p>Biblioteca Checklists</p></div></div>
+        <div id="portal" class="section"><div class="card"><h3><i class="fas fa-user-friends"></i> Client Portal</h3><p>Colaboração, Feedback</p></div></div>
+        <div id="bi" class="section"><div class="card"><h3><i class="fas fa-chart-area"></i> BI Consultoria</h3><p>ROI Portfolio</p></div></div>
+        <div id="automation" class="section"><div class="card"><h3><i class="fas fa-bolt"></i> Automação</h3><p>Power Automate, Triggers</p></div></div>
+        <div id="notifications" class="section"><div class="card"><h3><i class="fas fa-bell"></i> Notificações</h3><p>Email, SMS, Push</p></div></div>
+        <div id="audit" class="section"><div class="card"><h3><i class="fas fa-history"></i> Auditoria</h3><p>Audit Trail</p></div></div>
+        <div id="integration" class="section"><div class="card"><h3><i class="fas fa-plugs"></i> Integração</h3><p>ERP, TMS, APIs</p></div></div>
+        <div id="mobile" class="section"><div class="card"><h3><i class="fas fa-mobile-alt"></i> Mobile</h3><p>Android/iOS, Offline</p></div></div>
+        <div id="workforce" class="section"><div class="card"><h3><i class="fas fa-hard-hat"></i> Workforce</h3><p>Gestão Operários</p></div></div>
+        <div id="quality" class="section"><div class="card"><h3><i class="fas fa-clipboard-check"></i> Qualidade</h3><p>RAMS, Não-conformidades</p></div></div>
+        <div id="security" class="section"><div class="card"><h3><i class="fas fa-shield-alt"></i> Segurança</h3><p>RBAC, 2FA, Encrypt</p></div></div>
+        <div id="ai" class="section"><div class="card"><h3><i class="fas fa-brain"></i> IA/ML</h3><p>Previsão, Anomalies</p></div></div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
