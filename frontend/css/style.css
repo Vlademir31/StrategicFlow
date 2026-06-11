@@ -11,6 +11,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: #f5f7fa;
     transition: background 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
 }
 
 /* ============================
@@ -37,16 +38,16 @@ body.dark {
 }
 
 /* ============================
-   SIDEBAR PREMIUM
+   SIDEBAR PREMIUM RESPONSIVA
 ============================ */
 .sidebar {
     width: 260px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #0D8ABC, #053B5E);
     background: var(--sidebar-bg);
     color: var(--text-light);
-    transition: width 0.3s ease;
-    overflow: hidden;
+    transition: width 0.3s ease, transform 0.3s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: fixed;
     left: 0;
     top: 0;
@@ -54,14 +55,33 @@ body.dark {
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Colapsada (ícones-only) */
 .sidebar.collapsed {
     width: 72px;
+}
+
+/* SCROLLBAR customizada */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
 }
 
 /* HEADER / LOGO */
 .sidebar-header {
     padding: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    background: var(--sidebar-bg);
+    z-index: 10;
 }
 
 .sidebar-logo {
@@ -123,6 +143,7 @@ body.dark {
 /* NAV ITEMS */
 .sidebar-nav {
     margin-top: 10px;
+    padding: 10px 0;
 }
 
 .nav-item {
@@ -221,7 +242,7 @@ body.dark {
     display: none !important;
 }
 
-/* Hover inteligente no colapso */
+/* Hover inteligente no colapso (POPOVER) */
 .sidebar.collapsed .menu-category:hover .category-items {
     display: block !important;
     position: absolute;
@@ -239,7 +260,7 @@ body.dark {
     display: inline;
 }
 
-/* FIXED TOP (Dashboard sempre visível) */
+/* FIXED TOP */
 .menu-section.fixed-top {
     margin-bottom: 10px;
 }
@@ -255,12 +276,13 @@ body.dark {
 }
 
 /* ============================
-   MAIN CONTENT
+   MAIN CONTENT RESPONSIVA
 ============================ */
 .main-content {
     margin-left: 260px;
     transition: margin-left 0.3s ease;
     min-height: 100vh;
+    padding: 0;
 }
 
 .sidebar.collapsed ~ .main-content {
@@ -268,17 +290,20 @@ body.dark {
 }
 
 /* ============================
-   HEADER
+   HEADER RESPONSIVO
 ============================ */
 .header {
     background: white;
-    padding: 20px 40px;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid #e0e0e0;
     position: sticky;
     top: 0;
     z-index: 900;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 body.dark .header {
@@ -289,12 +314,14 @@ body.dark .header {
 .header-left {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 .header-left h2 {
-    font-size: 24px;
+    font-size: 20px;
     color: #333;
+    white-space: nowrap;
 }
 
 body.dark .header-left h2 {
@@ -305,13 +332,13 @@ body.dark .header-left h2 {
 .connection-status {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 12px;
 }
 
 .status-indicator {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
 }
 
@@ -324,13 +351,14 @@ body.dark .header-left h2 {
 }
 
 .btn-small {
-    padding: 8px 16px;
+    padding: 6px 12px;
     background: #00d4ff;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s ease;
+    font-size: 12px;
 }
 
 .btn-small:hover {
@@ -341,22 +369,24 @@ body.dark .header-left h2 {
 .header-right {
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .user-info img {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
 }
 
 .user-info span {
     color: #333;
+    font-size: 14px;
 }
 
 body.dark .user-info span {
@@ -364,18 +394,18 @@ body.dark .user-info span {
 }
 
 .user-role {
-    font-size: 12px;
+    font-size: 11px;
     color: #999;
-    margin-left: 8px;
+    margin-left: 6px;
 }
 
 #theme-toggle {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     color: #666;
-    font-size: 18px;
+    font-size: 16px;
     transition: color 0.2s ease;
 }
 
@@ -388,11 +418,12 @@ body.dark #theme-toggle {
 }
 
 /* ============================
-   SECTIONS
+   SECTIONS RESPONSIVAS
 ============================ */
 .section {
-    padding: 40px;
+    padding: 20px;
     display: none;
+    overflow-x: hidden;
 }
 
 .section.active {
@@ -400,15 +431,274 @@ body.dark #theme-toggle {
 }
 
 /* ============================
-   DASHBOARD / CARDS
+   DASHBOARD GRID RESPONSIVO
 ============================ */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
-    margin-top: 30px;
+    gap: 20px;
+    margin-top: 20px;
 }
 
+/* RESPONSIVIDADE: Desktop Grande */
+@media (min-width: 1920px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 25px;
+    }
+    
+    .kpi-card {
+        padding: 30px;
+    }
+    
+    .kpi-value .value {
+        font-size: 42px;
+    }
+}
+
+/* RESPONSIVIDADE: Desktop Normal */
+@media (max-width: 1600px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* RESPONSIVIDADE: Laptop */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+    
+    .chart-container {
+        padding: 20px;
+    }
+    
+    .chart-wrapper {
+        height: 250px;
+    }
+}
+
+/* RESPONSIVIDADE: Tablet Grande */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .sidebar.collapsed {
+        width: 60px;
+    }
+    
+    .main-content {
+        margin-left: 220px;
+    }
+    
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 60px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .areas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pdca-board {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .section {
+        padding: 15px;
+    }
+}
+
+/* RESPONSIVIDADE: Tablet */
+@media (max-width: 768px) {
+    /* Sidebar fora da tela */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    /* Header */
+    .header {
+        padding: 12px 15px;
+    }
+    
+    .header-left h2 {
+        font-size: 18px;
+    }
+    
+    .user-info span {
+        display: none;
+    }
+    
+    .user-role {
+        display: none;
+    }
+    
+    /* Dashboard */
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .kpi-card {
+        padding: 18px;
+    }
+    
+    .kpi-value .value {
+        font-size: 28px;
+    }
+    
+    .kpi-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    /* Chart */
+    .chart-container {
+        padding: 15px;
+    }
+    
+    .chart-wrapper {
+        height: 200px;
+    }
+    
+    /* Areas Críticas */
+    .areas-criticas {
+        padding: 15px;
+    }
+    
+    .areas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* PDCA */
+    .pdca-board {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Kaizen */
+    .kaizen-board {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Sections */
+    .section {
+        padding: 12px;
+    }
+    
+    .card {
+        padding: 18px;
+    }
+    
+    .card h3 {
+        font-size: 18px;
+    }
+}
+
+/* RESPONSIVIDADE: Mobile Pequeno */
+@media (max-width: 480px) {
+    /* Dashboard */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .kpi-card {
+        padding: 15px;
+    }
+    
+    .kpi-value .value {
+        font-size: 24px;
+    }
+    
+    .kpi-header {
+        gap: 8px;
+    }
+    
+    .kpi-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+    
+    .kpi-title {
+        font-size: 13px;
+    }
+    
+    /* Chart */
+    .chart-wrapper {
+        height: 180px;
+    }
+    
+    /* Areas */
+    .area-card {
+        padding: 18px;
+    }
+    
+    /* Header */
+    .header-left h2 {
+        font-size: 16px;
+    }
+    
+    .btn-small {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+    
+    .connection-status {
+        font-size: 11px;
+    }
+    
+    /* Cards */
+    .card {
+        padding: 15px;
+    }
+    
+    .card h3 {
+        font-size: 16px;
+    }
+    
+    .card p {
+        font-size: 13px;
+    }
+    
+    /* Tables */
+    .interactive-table {
+        font-size: 12px;
+    }
+    
+    .interactive-table th,
+    .interactive-table td {
+        padding: 8px;
+    }
+}
+
+/* ============================
+   CARDS RESPONSIVOS
+============================ */
 .kpi-card {
     background: white;
     padding: 25px;
@@ -523,7 +813,9 @@ body.dark .kpi-value .value {
     margin-top: 8px;
 }
 
-/* CHART */
+/* ============================
+   CHART RESPONSIVO
+============================ */
 .chart-container {
     background: white;
     padding: 30px;
@@ -541,7 +833,9 @@ body.dark .chart-container {
     width: 100%;
 }
 
-/* ÁREAS CRÍTICAS */
+/* ============================
+   AREAS CRÍTICAS RESPONSIVO
+============================ */
 .areas-criticas {
     background: white;
     padding: 30px;
@@ -601,7 +895,9 @@ body.dark .area-card {
     color: #ff7f50;
 }
 
-/* CARDS GERAL */
+/* ============================
+   CARDS GERAL
+============================ */
 .card {
     background: white;
     padding: 25px;
@@ -616,6 +912,7 @@ body.dark .card {
 .card h3 {
     margin-bottom: 15px;
     color: #333;
+    font-size: 20px;
 }
 
 body.dark .card h3 {
@@ -625,26 +922,32 @@ body.dark .card h3 {
 .card p {
     color: #666;
     margin-bottom: 20px;
+    font-size: 14px;
 }
 
 body.dark .card p {
     color: #94a3b8;
 }
 
-/* TABLES */
+/* ============================
+   TABLES RESPONSIVO
+============================ */
 .table-container {
     margin-top: 20px;
+    overflow-x: auto;
 }
 
 .interactive-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
 }
 
 .interactive-table th,
 .interactive-table td {
     padding: 12px;
     border-bottom: 1px solid #eee;
+    text-align: left;
 }
 
 body.dark .interactive-table th,
@@ -655,6 +958,7 @@ body.dark .interactive-table td {
 .interactive-table th {
     background: #f5f7fa;
     color: #333;
+    font-weight: 600;
 }
 
 body.dark .interactive-table th {
@@ -662,12 +966,15 @@ body.dark .interactive-table th {
     color: #e2e8f0;
 }
 
-/* BPMN */
+/* ============================
+   BPMN RESPONSIVO
+============================ */
 .bpmn-editor-container {
     display: flex;
     gap: 20px;
     height: 500px;
     margin-top: 20px;
+    overflow-x: auto;
 }
 
 .bpmn-toolbox {
@@ -675,6 +982,7 @@ body.dark .interactive-table th {
     background: white;
     padding: 20px;
     border-radius: 12px;
+    overflow-y: auto;
 }
 
 body.dark .bpmn-toolbox {
@@ -686,6 +994,7 @@ body.dark .bpmn-toolbox {
     background: white;
     border: 2px dashed #cbd5e1;
     border-radius: 12px;
+    min-width: 300px;
 }
 
 body.dark .bpmn-canvas {
@@ -693,18 +1002,22 @@ body.dark .bpmn-canvas {
     border-color: #475569;
 }
 
-/* PDCA */
+/* ============================
+   PDCA RESPONSIVO
+============================ */
 .pdca-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-top: 20px;
+    overflow-x: auto;
 }
 
 .pdca-column {
     background: white;
     padding: 20px;
     border-radius: 12px;
+    min-width: 200px;
 }
 
 body.dark .pdca-column {
@@ -714,6 +1027,7 @@ body.dark .pdca-column {
 .pdca-column h4 {
     color: #3742fa;
     margin-bottom: 15px;
+    font-size: 16px;
 }
 
 .pdca-item {
@@ -727,18 +1041,22 @@ body.dark .pdca-item {
     background: #0f172a;
 }
 
-/* KAIZEN */
+/* ============================
+   KAIZEN RESPONSIVO
+============================ */
 .kaizen-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin-top: 20px;
+    overflow-x: auto;
 }
 
 .kaizen-column {
     background: #f5f7fa;
     padding: 15px;
     border-radius: 8px;
+    min-width: 200px;
 }
 
 body.dark .kaizen-column {
@@ -748,6 +1066,7 @@ body.dark .kaizen-column {
 .kaizen-column h5 {
     margin-bottom: 10px;
     color: #666;
+    font-size: 14px;
 }
 
 body.dark .kaizen-column h5 {
@@ -765,42 +1084,31 @@ body.dark .kaizen-card {
     background: #1e293b;
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 1200px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .areas-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .pdca-board {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* ============================
+   MENU TOGGLE (MOBILE)
+============================ */
+#menu-toggle {
+    cursor: pointer;
+}
+
+/* Botão menu mobile (só aparece em mobile) */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    background: #00d4ff;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 @media (max-width: 768px) {
-    .sidebar {
-        left: -260px;
-    }
-    
-    .sidebar.open {
-        left: 0;
-    }
-    
-    .main-content {
-        margin-left: 0 !important;
-    }
-    
-    .sidebar.collapsed ~ .main-content {
-        margin-left: 0 !important;
-    }
-    
-    .dashboard-grid,
-    .areas-grid,
-    .pdca-board,
-    .kaizen-board {
-        grid-template-columns: 1fr;
+    .mobile-menu-toggle {
+        display: block;
     }
 }
