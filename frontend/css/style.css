@@ -89,6 +89,7 @@ body.dark {
     align-items: center;
     gap: 12px;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
 }
 

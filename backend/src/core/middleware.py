@@ -1,10 +1,14 @@
 from aiohttp import web
-from core.security import decode_token
+from typing import Any, Awaitable, Callable, cast
+from core.security import decode_token  # type: ignore[reportUnknownVariableType]
 
 
 def setup_middlewares(app: web.Application):
     @web.middleware
-    async def auth_tenant_middleware(request, handler):
+    async def auth_tenant_middleware(
+        request: web.Request,
+        handler: Callable[[web.Request], Awaitable[web.StreamResponse]],
+    ) -> web.StreamResponse:
         auth_header = request.headers.get("Authorization")
         request["tenant_id"] = None
         request["user"] = None
@@ -12,7 +16,7 @@ def setup_middlewares(app: web.Application):
         if auth_header and auth_header.startswith("Bearer "):
             token = auth_header.split(" ", 1)[1]
             try:
-                payload = decode_token(token)
+                payload = cast(dict[str, Any], decode_token(token))
                 request["tenant_id"] = payload.get("tenant_id")
                 request["user"] = payload.get("sub")
             except Exception:
@@ -21,9 +25,12 @@ def setup_middlewares(app: web.Application):
         return await handler(request)
 
     @web.middleware
-    async def cors_middleware(request, handler):
+    async def cors_middleware(
+        request: web.Request,
+        handler: Callable[[web.Request], Awaitable[web.StreamResponse]],
+    ) -> web.StreamResponse:
         if request.method == "OPTIONS":
-            resp = web.Response(status=200)
+            resp: web.StreamResponse = web.Response(status=200)
         else:
             resp = await handler(request)
 
