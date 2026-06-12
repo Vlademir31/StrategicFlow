@@ -4,6 +4,23 @@ from core.security import decode_token  # type: ignore[reportUnknownVariableType
 
 
 def setup_middlewares(app: web.Application):
+
+        @web.middleware
+    async def auth_tenant_middleware(
+        request: web.Request,
+        handler: cast(Any, None),
+    ) -> web.StreamResponse:
+        
+        # ---> ADICIONADO: Se for a rota do WebSocket, ignora validação estrita de header
+        if request.path == "/ws/kpis":
+            request["tenant_id"] = "default-tenant"
+            request["user"] = "consultor-live"
+            return await handler(request)
+
+        auth_header = request.headers.get("Authorization")
+        request["tenant_id"] = None
+        request["user"] = None
+        
     @web.middleware
     async def auth_tenant_middleware(
         request: web.Request,
