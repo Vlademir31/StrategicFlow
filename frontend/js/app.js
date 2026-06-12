@@ -399,68 +399,48 @@ class StrategicFlowAPI {
                         </tr>
                     `).join('')}
                 </tbody>`;
-
-                } else if (elementId === 'workforce-view') {
-            // Ajuste de Sincronia: Aceita o array plano direto ou encapsulado na chave consultants
+     //renderData//
+                }         else if (elementId === 'workforce-view') {
             const consultores = Array.isArray(data) ? data : (data.consultants || []);
-            
             if (!consultores.length) {
-                el.innerHTML = '<p style="color:#94a3b8; padding:20px; text-align:center;">Nenhum engenheiro ou consultor alocado neste Tenant ainda.</p>';
+                el.innerHTML = '<p style="color:#94a3b8; padding:20px; text-align:center;">Nenhum engenheiro alocado.</p>';
                 return;
             }
             
             el.innerHTML = `
                 <div style="margin-bottom:20px;">
                     <h4 style="margin:0; color:#1e293b;">Alocação de Engenheiros & Consultores de Processo</h4>
-                    <p style="margin:5px 0 20px 0; color:#64748b; font-size:14px;">Mapeamento de Billable Hours (Horas Faturadas vs Capacidade Útil total de 160h/mês).</p>
                 </div>
                 
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; width:100%;">
+                <!-- Uso estrito das suas classes de estilo CSS enviadas -->
+                <div class="workforce-grid">
                     ${consultores.map(c => {
-                        // Captura os valores garantindo fallbacks caso alguma coluna venha nula do banco
-                        const nome = c.nome || 'Consultor Sem Nome';
-                        const cargo = c.cargo_senioridade || 'Consultor';
-                        const status = c.status || 'Disponível';
-                        const utilizacao = c.taxa_utilizacao_percent !== undefined ? c.taxa_utilizacao_percent : 0;
-                        const custo = c.custo_hora !== undefined ? c.custo_hora : 0.0;
-                        const dedicacao = c.dedicacao_atual !== undefined ? c.dedicacao_atual : 0;
-
-                        // Determina a cor com base na meta de eficiência técnica de faturamento de 75%
-                        const corBarra = utilizacao >= 75 ? '#2ed573' : '#ff4757';
+                        const utilizacao = c.taxa_utilizacao_percent || 0;
+                        // Define a cor de progresso usando o padrão das suas métricas
+                        const corProgress = utilizacao >= 75 ? '#2ed573' : '#ff4757';
                         
                         return `
-                            <div style="background:white; border:1px solid #e2e8f0; padding:20px; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);">
-                                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
+                            <div class="workforce-card">
+                                <div class="workforce-card-header">
                                     <div>
-                                        <h5 style="margin:0; color:#1e293b; font-size:16px;">${nome}</h5>
-                                        <span style="font-size:13px; color:#64748b;">${cargo}</span>
+                                        <strong>${c.nome || 'Consultor'}</strong><br>
+                                        <span class="workforce-card-title">${c.cargo_senioridade || 'Membro'}</span>
                                     </div>
-                                    <span style="background:${status === 'Disponível' ? '#e0ffe0' : '#fff3cd'}; color:${status === 'Disponível' ? '#207220' : '#a07800'}; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; height:fit-content;">
-                                        ${status}
+                                    <span class="workforce-status-tag" style="background:${c.status === 'Disponível' ? '#e0ffe0' : '#fff3cd'}; color:${c.status === 'Disponível' ? '#207220' : '#a07800'};">
+                                        ${c.status || 'Ativo'}
                                     </span>
                                 </div>
-                                
-                                <div style="margin-top:15px;">
-                                    <div style="display:flex; justify-content:space-between; font-size:13px; color:#475569; margin-bottom:5px;">
-                                        <span>Taxa de Utilização</span>
-                                        <strong>${utilizacao.toFixed(1)}%</strong>
-                                    </div>
-                                    <!-- Barra de Progresso Dinâmica com CSS Inline Puro -->
-                                    <div style="width:100%; background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden;">
-                                        <div style="width:${Math.min(utilizacao, 100)}%; background:${corBarra}; height:100%; border-radius:4px; transition:width 0.5s ease;"></div>
-                                    </div>
-                                    <div style="font-size:11px; color:#94a3b8; margin-top:8px;">
-                                        Custo Operacional: R$ ${custo.toFixed(2)}/h | Dedicação: ${dedicacao}%
-                                    </div>
+                                <div class="workforce-utilization">Utilização das Horas: <strong>${utilizacao.toFixed(1)}%</strong></div>
+                                <div class="workforce-progress">
+                                    <div class="workforce-progress-bar" style="width: ${Math.min(utilizacao, 100)}%; background: ${corProgress};"></div>
                                 </div>
                             </div>
                         `;
                     }).join('')}
-                </div>
-            `;
+                </div>`;
+        }
 
-
-        } else if (elementId === 'client-portal-view') {
+         else if (elementId === 'client-portal-view') {
             const processos = data.processes || [];
             el.innerHTML = `
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; width:100%;">

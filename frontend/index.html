@@ -210,31 +210,41 @@
 
        <!-- 2. WORKFLOW (Sua Seção no index.html) -->
 <div id="workforce" class="section active">
+    <style>
+        .workforce-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; width:100%; }
+        .workforce-card { background:white; border:1px solid #e2e8f0; padding:20px; border-radius:12px; }
+        .workforce-card-header { display:flex; justify-content:space-between; margin-bottom:10px; }
+        .workforce-card-title { font-size:12px; color:#64748b; }
+        .workforce-status-tag { background:#e0ffe0; color:#207220; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; height:fit-content; }
+        .workforce-utilization { font-size:13px; color:#475569; margin-bottom:5px; }
+        .workforce-progress { width:100%; background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden; }
+        .workforce-progress-bar { width:0%; background:#ff4757; height:100%; }
+    </style>
     
     <!-- O JavaScript injetou todo este bloco dinâmico aqui dentro: -->
     <div id="workforce-view">
         
-        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; width:100%;">
+        <div class="workforce-grid">
             
             <!-- Cartão do Consultor Gerado via Loop .map() -->
-            <div style="background:white; border:1px solid #e2e8f0; padding:20px; border-radius:12px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <div class="workforce-card">
+                <div class="workforce-card-header">
                     <div>
                         <strong>Juliana Sênior Lean</strong><br>
-                        <span style="font-size:12px; color:#64748b;">Senior</span>
+                        <span class="workforce-card-title">Senior</span>
                     </div>
-                    <span style="background:#e0ffe0; color:#207220; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; height:fit-content;">
+                    <span class="workforce-status-tag">
                         Disponível
                     </span>
                 </div>
                 
-                <div style="font-size:13px; color:#475569; margin-bottom:5px;">
+                <div class="workforce-utilization">
                     Utilização das Horas: <strong>0.0%</strong>
                 </div>
                 
                 <!-- Barra de Progresso Operacional -->
-                <div style="width:100%; background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden;">
-                    <div style="width:0%; background:#ff4757; height:100%;"></div>
+                <div class="workforce-progress">
+                    <div class="workforce-progress-bar"></div>
                 </div>
             </div>
             
@@ -323,8 +333,11 @@
 
         <!-- 11-24. OUTRAS PAGES -->
         <div id="diagnostics" class="section"><div class="card"><h3><i class="fas fa-stethoscope"></i> Diagnósticos</h3><p>Baseline, Gap, Recommendations</p></div></div>
+       
         <div id="reports" class="section"><div class="card"><h3><i class="fas fa-file-pdf"></i> Relatórios</h3><p>PDF/Excel Executivos</p></div></div>
+       
         <div id="mapping" class="section"><div class="card"><h3><i class="fas fa-map"></i> VSM/Swimlane</h3><p>Mapeamento Avançado</p></div></div>
+       
         <div id="templates" class="section"><div class="card"><h3><i class="fas fa-file-alt"></i> Templates</h3><p>Biblioteca Checklists</p></div></div>
         <div id="portal" class="section"><div class="card"><h3><i class="fas fa-user-friends"></i> Client Portal</h3><p>Colaboração, Feedback</p></div></div>
         <div id="bi" class="section"><div class="card"><h3><i class="fas fa-chart-area"></i> BI Consultoria</h3><p>ROI Portfolio</p></div></div>
