@@ -8,13 +8,13 @@ class StrategicFlowAPI {
         // Alinhado cirurgicamente com as portas e caminhos das APIs do backend
         this.API_URL = 'http://localhost:8001/api';
         this.WS_URL = 'ws://localhost:8001/ws/kpis';
-        
+
         this.kpis = { cycleTime: null, otif: null, efficiency: null, rejection: null, roi: null, success: null, nps: null, throughput: null };
         this.ws = null;
         this.chart = null;
         this.restInterval = null;
         this.activeProcessId = null; // Controla o chat ativo do Portal do Cliente
-        
+
         this.init();
     }
 
@@ -44,23 +44,23 @@ class StrategicFlowAPI {
     // === NAVIGATION (ACESSO AS PAGES) ===
     setupNavigation() {
         console.log('📍 Configurando navegação...');
-        
+
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 const section = item.dataset.section;
                 if (!section) return;
-                
+
                 console.log(`📍 Navegando para a seção: ${section}`);
-                
+
                 // Remove as classes de ativo de todas as abas e painéis
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                
+
                 // Ativa visualmente o item clicado no menu
                 item.classList.add('active');
-                
+
                 // Apresenta o painel correspondente na tela principal
                 const targetSection = document.getElementById(section);
                 if (targetSection) {
@@ -74,24 +74,24 @@ class StrategicFlowAPI {
     // === MENU COLAPSÁVEL (SUBMENU) ===
     setupMenuCollapse() {
         console.log('🎛️ Configurando menus sanfona...');
-        
+
         document.querySelectorAll('.category-header').forEach(header => {
             header.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 const category = header.parentElement;
                 const isOpen = category.classList.contains('open');
-                
+
                 // Fecha as outras categorias para manter a interface organizada
                 document.querySelectorAll('.menu-category').forEach(cat => {
                     cat.classList.remove('open');
                 });
-                
+
                 // Se a categoria estava fechada, expande ela agora
                 if (!isOpen) {
                     category.classList.add('open');
                 }
-                
+
                 console.log(`🎛️ Menu: ${isOpen ? 'fechado' : 'aberto'}`);
             });
         });
@@ -101,7 +101,7 @@ class StrategicFlowAPI {
     setupSidebarToggle() {
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.getElementById('menu-toggle');
-        
+
         if (toggleBtn && sidebar) {
             toggleBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('collapsed');
@@ -113,16 +113,16 @@ class StrategicFlowAPI {
     // === WEBSOCKET REALTIME ===
     connectWebSocket() {
         console.log('🔌 Tentando abrir conexão em tempo real via WebSocket:', this.WS_URL);
-        
+
         try {
             this.ws = new WebSocket(this.WS_URL);
-            
+
             this.ws.onopen = () => {
                 console.log('✅ Canal WebSocket CONECTADO com sucesso!');
                 this.updateStatus('connected', 'WebSocket Conectado');
                 this.fetchAllData();
             };
-            
+
             this.ws.onmessage = (e) => {
                 console.log('📡 Dados de streaming do WebSocket recebidos:', e.data);
                 try {
@@ -132,13 +132,13 @@ class StrategicFlowAPI {
                     console.error('Erro ao processar mensagem do canal:', error);
                 }
             };
-            
+
             this.ws.onerror = (error) => {
                 console.error('❌ Falha na infraestrutura do WebSocket:', error);
                 this.updateStatus('disconnected', 'WebSocket Falhou - acionando REST');
                 this.startRESTFallback();
             };
-            
+
             this.ws.onclose = () => {
                 console.log('❌ Canal WebSocket fechado.');
                 this.updateStatus('disconnected', 'WebSocket Desconectado - acionando REST');
@@ -154,32 +154,38 @@ class StrategicFlowAPI {
         const indicator = document.getElementById('connection-indicator');
         const textEl = document.getElementById('connection-text');
         const btn = document.getElementById('connect-btn');
-        
+
         if (indicator) indicator.className = `status-indicator ${status}`;
         if (textEl) textEl.textContent = text;
         if (btn) btn.style.display = status === 'connected' ? 'none' : 'inline';
-        
+
         console.log(`📊 Status da Rede Atualizado: ${status} - ${text}`);
     }
 
     startRESTFallback() {
         console.log('⚡ Ativando mecanismo de resiliência (Polling HTTP a cada 30s)...');
-        
+
         if (this.restInterval) clearInterval(this.restInterval);
         this.restInterval = setInterval(() => this.fetchKPIs(), 30000);
         this.fetchKPIs();
     }
 
-    // === FETCH ALL DATA (CARGA DE DADOS DOS MÓDULOS) ===
+        // === FETCH ALL DATA ===
     async fetchAllData() {
         console.log('📥 Sincronizando dados de todos os submódulos...');
         await this.fetchData('workflow-list', '/workflow');
         await this.fetchData('pdca-board', '/pdca');
         await this.fetchData('kaizen-board', '/kaizen');
-        await this.fetchData('crm-table', '/crm/companies');       // Sincronizado com o CRM relacional
-        await this.fetchData('workforce-view', '/workforce/dashboard'); // Sincronizado com faturamento/ociosidade
-        await this.fetchData('client-portal-view', '/portal/my-processes'); // Sincronizado com os processos do cliente
+        await this.fetchData('crm-table', '/crm/companies'); 
+        await this.fetchData('projects-table', '/projects');
+        
+        // ---> ADICIONADO AQUI: Ativa a carga real da matriz de alocação da equipe
+        await this.fetchData('workforce-view', '/workforce/dashboard');
+        
+        // Ativa a carga real dos processos do Portal do Cliente
+        await this.fetchData('client-portal-view', '/portal/my-processes');
     }
+
 
     async fetchData(elementId, endpoint) {
         try {
@@ -187,12 +193,12 @@ class StrategicFlowAPI {
             const res = await fetch(`${this.API_URL}${endpoint}`, {
                 headers: this.getHeaders()
             });
-            
+
             if (!res.ok) {
                 console.error(`❌ Erro no servidor ao buscar ${endpoint}: ${res.status}`);
                 return;
             }
-            
+
             const data = await res.json();
             console.log(`✅ Dados carregados para ${endpoint}:`, data);
             this.renderData(elementId, data);
@@ -204,18 +210,18 @@ class StrategicFlowAPI {
     // === KPIs HTTP FALLBACK ===
     async fetchKPIs() {
         console.log('📥 Buscando KPIs via requisição REST tradicional...');
-        
+
         try {
             const res = await fetch(`${this.API_URL}/kpis`, {
                 headers: this.getHeaders()
             });
-            
+
             if (!res.ok) {
                 console.error(`❌ Erro HTTP na rota de KPIs: ${res.status}`);
                 this.useMockData();
                 return;
             }
-            
+
             const data = await res.json();
             console.log('✅ KPIs REST capturados com sucesso:', data);
             this.updateKPIs(data);
@@ -229,7 +235,7 @@ class StrategicFlowAPI {
         console.log('🔄 Atualizando elementos de texto e tendências da tela...');
         this.kpis = data;
         const now = new Date().toLocaleTimeString();
-        
+
         Object.keys(data).forEach(kpi => {
             const el = document.getElementById(`kpi-${kpi}`);
             const trend = document.getElementById(`trend-${kpi}`);
@@ -237,35 +243,35 @@ class StrategicFlowAPI {
 
             if (el && data[kpi] !== null && data[kpi] !== undefined) {
                 const value = data[kpi];
-                el.textContent = kpi === 'throughput' || kpi === 'nps' ? 
-                               value.toFixed(0) : 
-                               value.toFixed(1) + (kpi === 'cycleTime' ? 'h' : '%');
-                
+                el.textContent = kpi === 'throughput' || kpi === 'nps' ?
+                    value.toFixed(0) :
+                    value.toFixed(1) + (kpi === 'cycleTime' ? 'h' : '%');
+
                 const target = this.getTarget(kpi);
                 const trendValue = this.calcTrend(value, target, kpi === 'rejection');
-                
+
                 if (trend) {
                     trend.textContent = trendValue;
                     trend.className = `trend ${trendValue.includes('+') ? 'up' : 'down'}`;
                 }
-                
+
                 if (realtime) realtime.textContent = now;
             }
         });
-        
+
         this.updateChart();
     }
 
     getTarget(kpi) {
-        return { 
-            cycleTime: 20, 
-            otif: 95, 
-            efficiency: 95, 
-            rejection: 2, 
-            roi: 200, 
-            success: 85, 
-            nps: 75, 
-            throughput: 1200 
+        return {
+            cycleTime: 20,
+            otif: 95,
+            efficiency: 95,
+            rejection: 2,
+            roi: 200,
+            success: 85,
+            nps: 75,
+            throughput: 1200
         }[kpi];
     }
 
@@ -290,7 +296,7 @@ class StrategicFlowAPI {
         };
         this.updateKPIs(mock);
     }
-    // === CHART.JS REALTIME (CORRIGIDO CONTRA TRAVAMENTOS) ===
+        // === CHART.JS REALTIME (CORRIGIDO E SEGURO CONTRA TRAVAMENTOS) ===
     initChart() {
         const canvas = document.getElementById('realtime-chart');
         if (!canvas) return;
@@ -318,22 +324,24 @@ class StrategicFlowAPI {
     }
 
     updateChart() {
-        // Validação de segurança estrita para evitar erros fatais de nulos
+        // Validação de segurança para evitar erros de nulos no console
         if (!this.chart || !this.kpis || this.kpis.cycleTime === null) return;
         
         const now = new Date().toLocaleTimeString();
         
-        // Remove leituras antigas para manter a rolagem do gráfico limpa
+        // Remove leituras antigas para manter a rolagem do gráfico fluida
         if (this.chart.data.labels.length > 20) {
             this.chart.data.labels.shift();
             this.chart.data.datasets.forEach(d => d.data.shift());
         }
         
-        // CORREÇÃO CRÍTICA APLICADA: Empurra os dados para a propriedade data dos índices corretos do array datasets
         this.chart.data.labels.push(now);
-        this.chart.data.datasets[0].data.push(this.kpis.cycleTime);
-        this.chart.data.datasets[1].data.push(this.kpis.otif);
-        this.chart.data.datasets[2].data.push(this.kpis.efficiency || 90.0);
+        
+        // CORREÇÃO CRÍTICA: Mapeamento cirúrgico dos índices, [1] e [2] das linhas do gráfico
+        if (this.chart.data.datasets[0]) this.chart.data.datasets[0].data.push(this.kpis.cycleTime);
+        if (this.chart.data.datasets[1]) this.chart.data.datasets[1].data.push(this.kpis.otif);
+        if (this.chart.data.datasets[2]) this.chart.data.datasets[2].data.push(this.kpis.efficiency || 90.0);
+        
         this.chart.update();
     }
 
@@ -392,29 +400,65 @@ class StrategicFlowAPI {
                     `).join('')}
                 </tbody>`;
 
-        } else if (elementId === 'workforce-view') {
-            const consultores = data.consultants || [];
+                } else if (elementId === 'workforce-view') {
+            // Ajuste de Sincronia: Aceita o array plano direto ou encapsulado na chave consultants
+            const consultores = Array.isArray(data) ? data : (data.consultants || []);
+            
             if (!consultores.length) {
-                el.innerHTML = '<p style="color:#94a3b8;">Nenhum engenheiro alocado.</p>';
+                el.innerHTML = '<p style="color:#94a3b8; padding:20px; text-align:center;">Nenhum engenheiro ou consultor alocado neste Tenant ainda.</p>';
                 return;
             }
+            
             el.innerHTML = `
+                <div style="margin-bottom:20px;">
+                    <h4 style="margin:0; color:#1e293b;">Alocação de Engenheiros & Consultores de Processo</h4>
+                    <p style="margin:5px 0 20px 0; color:#64748b; font-size:14px;">Mapeamento de Billable Hours (Horas Faturadas vs Capacidade Útil total de 160h/mês).</p>
+                </div>
+                
                 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; width:100%;">
                     ${consultores.map(c => {
-                        const cor = c.taxa_utilizacao_percent >= 75 ? '#2ed573' : '#ff4757';
+                        // Captura os valores garantindo fallbacks caso alguma coluna venha nula do banco
+                        const nome = c.nome || 'Consultor Sem Nome';
+                        const cargo = c.cargo_senioridade || 'Consultor';
+                        const status = c.status || 'Disponível';
+                        const utilizacao = c.taxa_utilizacao_percent !== undefined ? c.taxa_utilizacao_percent : 0;
+                        const custo = c.custo_hora !== undefined ? c.custo_hora : 0.0;
+                        const dedicacao = c.dedicacao_atual !== undefined ? c.dedicacao_atual : 0;
+
+                        // Determina a cor com base na meta de eficiência técnica de faturamento de 75%
+                        const corBarra = utilizacao >= 75 ? '#2ed573' : '#ff4757';
+                        
                         return `
-                            <div style="background:white; border:1px solid #e2e8f0; padding:20px; border-radius:12px;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                    <div><strong>${c.nome}</strong><br><span style="font-size:12px; color:#64748b;">${c.cargo_senioridade}</span></div>
-                                    <span style="background:#e0ffe0; color:#207220; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; height:fit-content;">${c.status}</span>
+                            <div style="background:white; border:1px solid #e2e8f0; padding:20px; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);">
+                                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
+                                    <div>
+                                        <h5 style="margin:0; color:#1e293b; font-size:16px;">${nome}</h5>
+                                        <span style="font-size:13px; color:#64748b;">${cargo}</span>
+                                    </div>
+                                    <span style="background:${status === 'Disponível' ? '#e0ffe0' : '#fff3cd'}; color:${status === 'Disponível' ? '#207220' : '#a07800'}; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; height:fit-content;">
+                                        ${status}
+                                    </span>
                                 </div>
-                                <div style="font-size:13px; color:#475569; margin-bottom:5px;">Utilização das Horas: <strong>${c.taxa_utilizacao_percent}%</strong></div>
-                                <div style="width:100%; background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden;">
-                                    <div style="width:${Math.min(c.taxa_utilizacao_percent, 100)}%; background:${cor}; height:100%;"></div>
+                                
+                                <div style="margin-top:15px;">
+                                    <div style="display:flex; justify-content:space-between; font-size:13px; color:#475569; margin-bottom:5px;">
+                                        <span>Taxa de Utilização</span>
+                                        <strong>${utilizacao.toFixed(1)}%</strong>
+                                    </div>
+                                    <!-- Barra de Progresso Dinâmica com CSS Inline Puro -->
+                                    <div style="width:100%; background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden;">
+                                        <div style="width:${Math.min(utilizacao, 100)}%; background:${corBarra}; height:100%; border-radius:4px; transition:width 0.5s ease;"></div>
+                                    </div>
+                                    <div style="font-size:11px; color:#94a3b8; margin-top:8px;">
+                                        Custo Operacional: R$ ${custo.toFixed(2)}/h | Dedicação: ${dedicacao}%
+                                    </div>
                                 </div>
-                            </div>`;
+                            </div>
+                        `;
                     }).join('')}
-                </div>`;
+                </div>
+            `;
+
 
         } else if (elementId === 'client-portal-view') {
             const processos = data.processes || [];
@@ -441,7 +485,6 @@ class StrategicFlowAPI {
                 </div>`;
                 
         } else if (elementId.includes('table')) {
-            // Tratamento genérico de fallbacks de tabelas
             const rowsData = Array.isArray(data) ? data : [];
             if (!rowsData.length) return;
             const headers = Object.keys(rowsData[0]);
@@ -456,4 +499,55 @@ class StrategicFlowAPI {
         try {
             const res = await fetch(`${this.API_URL}/portal/comments/${idProcesso}`, { headers: this.getHeaders() });
             const data = await res.json();
-const historyEl = document.getElementById('portal-chat-history');if (historyEl && data.comments) {historyEl.innerHTML = data.comments.map(c => <div style="margin-bottom:10px; background:white; padding:10px; border-radius:8px; border:1px solid #e2e8f0;"> <strong style="font-size:12px;">${c.usuario_nome}</strong> <p style="margin:5px 0 0 0; color:#334155; font-size:13px;">${c.mensagem}</p> </div>).join('');historyEl.scrollTop = historyEl.scrollHeight;}} catch (err) { console.error("Erro ao carregar chat:", err); }}async sendPortalComment() {const input = document.getElementById('portal-message-input');if (!input || !input.value.trim() || !this.activeProcessId) return;try {const res = await fetch(${this.API_URL}/portal/comments, {method: 'POST',headers: this.getHeaders(),body: JSON.stringify({ id_processo: this.activeProcessId, mensagem: input.value.trim() })});if (res.ok) {input.value = '';this.loadProcessComments(this.activeProcessId);}} catch (err) { console.error("Erro ao enviar comentário:", err); }}// === DARK MODE ===setupDarkMode() {const themeBtn = document.getElementById('theme-toggle');if (!themeBtn) return;themeBtn.addEventListener('click', () => {document.body.classList.toggle('dark');const isDark = document.body.classList.contains('dark');themeBtn.innerHTML = isDark ? '' : '';console.log('🌙 Dark mode alterado.');});}}// === BOOTSTRAP INITIALIZATION ===console.log('💡 Strategic Flow - DEBUG MODE ON');const app = new StrategicFlowAPI();document.addEventListener("DOMContentLoaded", () => {app.setupSidebarToggle();app.setupDarkMode();});
+            const historyEl = document.getElementById('portal-chat-history');
+            if (historyEl && data.comments) {
+                historyEl.innerHTML = data.comments.map(c => `
+                    <div style="margin-bottom:10px; background:white; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
+                        <strong style="font-size:12px;">${c.usuario_nome}</strong>
+                        <p style="margin:5px 0 0 0; color:#334155; font-size:13px;">${c.mensagem}</p>
+                    </div>
+                `).join('');
+                historyEl.scrollTop = historyEl.scrollHeight;
+            }
+        } catch (err) {
+            console.error("Erro ao carregar chat:", err);
+        }
+    }
+
+    async sendPortalComment() {
+        const input = document.getElementById('portal-message-input');
+        if (!input || !input.value.trim() || !this.activeProcessId) return;
+        try {
+            const res = await fetch(`${this.API_URL}/portal/comments`, {
+                method: 'POST',
+                headers: this.getHeaders(),
+                body: JSON.stringify({ id_processo: this.activeProcessId, mensagem: input.value.trim() })
+            });
+            if (res.ok) {
+                input.value = '';
+                this.loadProcessComments(this.activeProcessId);
+            }
+        } catch (err) {
+            console.error("Erro ao enviar comentário:", err);
+        }
+    }
+               
+               // === DARK MODE ===
+               setupDarkMode() {
+                const themeBtn = document.getElementById('theme-toggle');
+                if (!themeBtn) return;
+                
+                themeBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                const isDark = document.body.classList.contains('dark');
+                themeBtn.innerHTML = isDark ? '' : '';
+                console.log('🌙 Dark mode alterado.');});}}
+              
+               // // === BOOTSTRAP INITIALIZATION ===
+
+               console.log('💡 Strategic Flow - DEBUG MODE ON');
+               const app = new StrategicFlowAPI();
+               
+               document.addEventListener("DOMContentLoaded", () => {
+                app.setupSidebarToggle();
+                app.setupDarkMode();});

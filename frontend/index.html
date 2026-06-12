@@ -208,13 +208,41 @@
             </div>
         </div>
 
-        <!-- 2. WORKFLOW -->
-        <div id="workforce" class="section">
-            <!-- O JAVASCRIPT INJETARÁ A MATRIZ DE ALOCAÇÃO DE TALENTOS AQUI DENTRO -->
-            <div id="workforce-view">
-                <p style="color:#94a3b8;">Carregando painel de eficiência operativa e alocação técnica...</p>
+       <!-- 2. WORKFLOW (Sua Seção no index.html) -->
+<div id="workforce" class="section active">
+    
+    <!-- O JavaScript injetou todo este bloco dinâmico aqui dentro: -->
+    <div id="workforce-view">
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; width:100%;">
+            
+            <!-- Cartão do Consultor Gerado via Loop .map() -->
+            <div style="background:white; border:1px solid #e2e8f0; padding:20px; border-radius:12px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <div>
+                        <strong>Juliana Sênior Lean</strong><br>
+                        <span style="font-size:12px; color:#64748b;">Senior</span>
+                    </div>
+                    <span style="background:#e0ffe0; color:#207220; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; height:fit-content;">
+                        Disponível
+                    </span>
+                </div>
+                
+                <div style="font-size:13px; color:#475569; margin-bottom:5px;">
+                    Utilização das Horas: <strong>0.0%</strong>
+                </div>
+                
+                <!-- Barra de Progresso Operacional -->
+                <div style="width:100%; background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden;">
+                    <div style="width:0%; background:#ff4757; height:100%;"></div>
+                </div>
             </div>
+            
         </div>
+
+    </div>
+</div>
+
 
 
         <!-- 3. BPMN -->
@@ -305,7 +333,7 @@
         <div id="audit" class="section"><div class="card"><h3><i class="fas fa-history"></i> Auditoria</h3><p>Audit Trail</p></div></div>
         <div id="integration" class="section"><div class="card"><h3><i class="fas fa-plugs"></i> Integração</h3><p>ERP, TMS, APIs</p></div></div>
         <div id="mobile" class="section"><div class="card"><h3><i class="fas fa-mobile-alt"></i> Mobile</h3><p>Android/iOS, Offline</p></div></div>
-        <div id="workforce" class="section"><div class="card"><h3><i class="fas fa-hard-hat"></i> Workforce</h3><p>Gestão Operários</p></div></div>
+        <div id="workflow" class="section"><div class="card"><h3><i class="fas fa-project-diagram"></i> Workflow & Governança</h3><p>Matriz de processos e governança operacional.</p></div></div>
         <div id="quality" class="section"><div class="card"><h3><i class="fas fa-clipboard-check"></i> Qualidade</h3><p>RAMS, Não-conformidades</p></div></div>
         <div id="security" class="section"><div class="card"><h3><i class="fas fa-shield-alt"></i> Segurança</h3><p>RBAC, 2FA, Encrypt</p></div></div>
         <div id="ai" class="section"><div class="card"><h3><i class="fas fa-brain"></i> IA/ML</h3><p>Previsão, Anomalies</p></div></div>
