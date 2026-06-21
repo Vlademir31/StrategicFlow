@@ -720,8 +720,137 @@ table tr:hover {
             margin-top: 40px;
             font-size: 0.9rem;
         }
-
-         /* MOBILE MUITO PEQUENO (até 480px) */
+        
+        .results { 
+            color: #27ae60; 
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        
+        /* ========================================
+           MEDIA QUERIES - ADAPTAÇÃO PARA DIFERENTES TELA
+           ======================================== */
+        
+        /* TABLET (768px - 1024px) */
+        @media screen and (max-width: 1024px) {
+            html {
+                font-size: 15px;
+            }
+            
+            main {
+                padding: 25px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+            
+            .contact-item {
+                margin: 10px;
+                padding: 12px 18px;
+            }
+        }
+        
+        /* MOBILE (até 767px) - Android e iOS */
+        @media screen and (max-width: 767px) {
+            html {
+                font-size: 14px;
+            }
+            
+            header {
+                padding: 25px 10px;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            main {
+                padding: 20px 10px;
+            }
+            
+            section {
+                padding: 20px 15px;
+                margin-bottom: 30px;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            img {
+                max-width: 150px;
+            }
+            
+            li {
+                font-size: 0.9rem;
+                padding: 8px 0;
+                padding-left: 25px;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .skill-card {
+                padding: 15px 10px;
+            }
+            
+            .skill-card strong {
+                font-size: 0.9rem;
+            }
+            
+            .skill-card p {
+                font-size: 0.75rem;
+            }
+            
+            .contact-item {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+                padding: 12px 15px;
+                min-width: auto;
+            }
+            
+            .contact-item i {
+                font-size: 1.5rem;
+            }
+            
+            .contact-item .label {
+                font-size: 0.75rem;
+            }
+            
+            .contact-item .value {
+                font-size: 0.85rem;
+            }
+            
+            .highlight {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .results {
+                font-size: 0.9rem;
+            }
+            
+            footer {
+                padding: 15px 10px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* MOBILE MUITO PEQUENO (até 480px) */
         @media screen and (max-width: 480px) {
             html {
                 font-size: 13px;
