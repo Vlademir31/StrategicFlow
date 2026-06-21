@@ -329,38 +329,51 @@
             </div>
         </div>
 
-       <!-- SEÇÃO: RECEIVING (CONSULTIVO) -->
+       <!-- ============================= -->
+<!-- SEÇÃO: RECEIVING (CONSULTIVO) -->
+<!-- ============================= -->
 <div id="receiving" class="section">
-    <h2>Recebimento (Consultivo)</h2>
 
-    <!-- Ações -->
+    <h2><i class="fas fa-truck-loading"></i> Recebimento (Consultivo)</h2>
+
+    <!-- AÇÕES -->
     <div class="actions">
-        <button onclick="carregarReceivingConsultivo()">Atualizar Dados</button>
-        <button onclick="exportarReceivingCSV()">Exportar CSV Consultivo</button>
+        <button onclick="carregarReceivingConsultivo()">
+            <i class="fas fa-sync"></i> Atualizar Dados
+        </button>
+        <button onclick="exportarReceivingCSV()">
+            <i class="fas fa-file-csv"></i> Exportar CSV Consultivo
+        </button>
     </div>
 
     <!-- KPIs CONSULTIVOS -->
     <div id="receiving-kpis" class="kpi-container">
-        <div class="kpi-card">
+
+        <div class="kpi-card kpi-card-blue">
             <span id="kpi-rec-tempo-medio">0 min</span>
             <label>Tempo Médio de Recebimento</label>
         </div>
-        <div class="kpi-card">
+
+        <div class="kpi-card kpi-card-red">
             <span id="kpi-rec-divergencia">0%</span>
             <label>Divergência de Conferência</label>
         </div>
-        <div class="kpi-card">
+
+        <div class="kpi-card kpi-card-green">
             <span id="kpi-rec-produtividade">0 u/h</span>
             <label>Produtividade Média por Operador</label>
         </div>
-        <div class="kpi-card">
+
+        <div class="kpi-card kpi-card-yellow">
             <span id="kpi-rec-gargalos">0</span>
             <label>Docas com Gargalo</label>
         </div>
-        <div class="kpi-card">
+
+        <div class="kpi-card kpi-card-purple">
             <span id="kpi-rec-sla">0%</span>
             <label>SLA de Recebimento</label>
         </div>
+
     </div>
 
     <!-- ALERTAS INTELIGENTES -->
@@ -368,42 +381,258 @@
 
     <!-- INSIGHTS AUTOMÁTICOS -->
     <div id="receiving-insights" class="insights-box">
-        <h3>Insights Automáticos</h3>
+        <h3><i class="fas fa-lightbulb"></i> Insights Automáticos</h3>
         <ul id="receiving-insights-list"></ul>
     </div>
 
     <!-- GRÁFICOS CONSULTIVOS -->
     <div id="receiving-charts" class="charts-container">
-        <canvas id="chartReceivingTempo"></canvas>
-        <canvas id="chartReceivingDivergencia"></canvas>
-        <canvas id="chartReceivingOperadores"></canvas>
-        <canvas id="chartReceivingDocas"></canvas>
+
+        <div class="chart-card">
+            <h4>Tempo Médio por Dia</h4>
+            <canvas id="chartReceivingTempo"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Divergência por SKU</h4>
+            <canvas id="chartReceivingDivergencia"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Produtividade por Operador</h4>
+            <canvas id="chartReceivingOperadores"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Volume por Doca</h4>
+            <canvas id="chartReceivingDocas"></canvas>
+        </div>
+
     </div>
 
     <!-- TABELA CONSULTIVA -->
-    <table>
-        <thead>
-        <tr>
-            <th>NF</th>
-            <th>SKU</th>
-            <th>Esperado</th>
-            <th>Recebido</th>
-            <th>Divergência</th>
-            <th>Operador</th>
-            <th>Doca</th>
-            <th>Tempo Total</th>
-            <th>SLA</th>
-            <th>Data</th>
-        </tr>
-        </thead>
-        <tbody id="tabela-receiving"></tbody>
-    </table>
+    <div class="table-container">
+        <table class="consult-table">
+            <thead>
+                <tr>
+                    <th>NF</th>
+                    <th>SKU</th>
+                    <th>Esperado</th>
+                    <th>Recebido</th>
+                    <th>Divergência</th>
+                    <th>Operador</th>
+                    <th>Doca</th>
+                    <th>Tempo Total</th>
+                    <th>SLA</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-receiving">
+                <tr><td colspan="10">Carregando análise consultiva...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
-    
-    <!--SEÇÃO: PUTAWAY-->
+<!-- ============================= -->
+<!-- SEÇÃO: PUTAWAY (CONSULTIVO) -->
+<!-- ============================= -->
+<div id="putaway" class="section">
 
-    <!--SEÇÃO: PICKING-->
+    <h2><i class="fas fa-dolly"></i> Putaway (Consultivo)</h2>
+
+    <!-- AÇÕES -->
+    <div class="actions">
+        <button onclick="carregarPutawayConsultivo()">
+            <i class="fas fa-sync"></i> Atualizar Dados
+        </button>
+        <button onclick="exportarPutawayCSV()">
+            <i class="fas fa-file-csv"></i> Exportar CSV Consultivo
+        </button>
+    </div>
+
+    <!-- KPIs -->
+    <div id="putaway-kpis" class="kpi-container">
+
+        <div class="kpi-card kpi-card-blue">
+            <span id="kpi-put-total-time">0 min</span>
+            <label>Tempo Total Médio</label>
+        </div>
+
+        <div class="kpi-card kpi-card-yellow">
+            <span id="kpi-put-travel-time">0 min</span>
+            <label>Tempo Médio de Deslocamento</label>
+        </div>
+
+        <div class="kpi-card kpi-card-green">
+            <span id="kpi-put-optimal-rate">0%</span>
+            <label>Slotting Ideal</label>
+        </div>
+
+        <div class="kpi-card kpi-card-red">
+            <span id="kpi-put-non-optimal">0</span>
+            <label>Slots Não Ideais</label>
+        </div>
+
+    </div>
+
+    <!-- ALERTAS -->
+    <div id="putaway-alerts" class="alert-box"></div>
+
+    <!-- INSIGHTS -->
+    <div id="putaway-insights" class="insights-box">
+        <h3><i class="fas fa-lightbulb"></i> Insights Automáticos</h3>
+        <ul id="putaway-insights-list"></ul>
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div id="putaway-charts" class="charts-container">
+
+        <div class="chart-card">
+            <h4>Tempo por SKU</h4>
+            <canvas id="chartPutawayTempo"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Slotting Ideal</h4>
+            <canvas id="chartPutawaySlotting"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Produtividade por Operador</h4>
+            <canvas id="chartPutawayOperadores"></canvas>
+        </div>
+
+    </div>
+
+    <!-- TABELA -->
+    <div class="table-container">
+        <table class="consult-table">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Nome</th>
+                    <th>Qtd</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Classe</th>
+                    <th>Operador</th>
+                    <th>Tempo Total</th>
+                    <th>Slot Ideal</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-putaway">
+                <tr><td colspan="10">Carregando análise consultiva...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+    <!-- ============================= -->
+<!-- SEÇÃO: PICKING (CONSULTIVO) -->
+<!-- ============================= -->
+<div id="picking" class="section">
+
+    <h2><i class="fas fa-box-open"></i> Picking (Consultivo)</h2>
+
+    <!-- AÇÕES -->
+    <div class="actions">
+        <button onclick="carregarPickingConsultivo()">
+            <i class="fas fa-sync"></i> Atualizar Dados
+        </button>
+        <button onclick="exportarPickingCSV()">
+            <i class="fas fa-file-csv"></i> Exportar CSV Consultivo
+        </button>
+    </div>
+
+    <!-- KPIs -->
+    <div id="picking-kpis" class="kpi-container">
+
+        <div class="kpi-card kpi-card-blue">
+            <span id="kpi-pick-avg-time">0 min</span>
+            <label>Tempo Médio de Picking</label>
+        </div>
+
+        <div class="kpi-card kpi-card-red">
+            <span id="kpi-pick-error-rate">0%</span>
+            <label>Taxa Média de Erro</label>
+        </div>
+
+        <div class="kpi-card kpi-card-green">
+            <span id="kpi-pick-productivity">0 u/h</span>
+            <label>Produtividade Média</label>
+        </div>
+
+        <div class="kpi-card kpi-card-yellow">
+            <span id="kpi-pick-divergences">0</span>
+            <label>Divergências</label>
+        </div>
+
+        <div class="kpi-card kpi-card-purple">
+            <span id="kpi-pick-sla">0%</span>
+            <label>SLA de Picking</label>
+        </div>
+
+    </div>
+
+    <!-- ALERTAS -->
+    <div id="picking-alerts" class="alert-box"></div>
+
+    <!-- INSIGHTS -->
+    <div id="picking-insights" class="insights-box">
+        <h3><i class="fas fa-lightbulb"></i> Insights Automáticos</h3>
+        <ul id="picking-insights-list"></ul>
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div id="picking-charts" class="charts-container">
+
+        <div class="chart-card">
+            <h4>Produtividade por Operador</h4>
+            <canvas id="chartPickingProd"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Erros por SKU</h4>
+            <canvas id="chartPickingErros"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h4>Tempo Médio por Dia</h4>
+            <canvas id="chartPickingTempo"></canvas>
+        </div>
+
+    </div>
+
+    <!-- TABELA -->
+    <div class="table-container">
+        <table class="consult-table">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>SKU</th>
+                    <th>Nome</th>
+                    <th>Qtd</th>
+                    <th>Zona</th>
+                    <th>Operador</th>
+                    <th>Tempo (min)</th>
+                    <th>Produtividade</th>
+                    <th>Erro (%)</th>
+                    <th>Divergência</th>
+                    <th>SLA</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-picking">
+                <tr><td colspan="12">Carregando análise consultiva...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
 
     <!--SEÇÃO: EMBALAGEM-->
 
@@ -450,9 +679,10 @@
 
 <!-- GRÁFICOS CONSULTIVOS -->
 <div id="inventory-charts" class="charts-container">
-    <canvas id="chartABC"></canvas>
-    <canvas id="chartAging"></canvas>
-    <canvas id="chartCobertura"></canvas>
+
+    <canvas id="chartABC">ABC</canvas>
+    <canvas id="chartAging">Aging</canvas>
+    <canvas id="chartCobertura">Cobertura</canvas>
 </div>
 
 <!-- TABELA CONSULTIVA -->

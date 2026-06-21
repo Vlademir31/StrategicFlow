@@ -885,6 +885,67 @@ CREATE INDEX IF NOT EXISTS idx_receiving_kpi_cache_tenant ON receiving_kpi_cache
 CREATE INDEX IF NOT EXISTS idx_receiving_kpi_cache_date ON receiving_kpi_cache(kpi_date);
 
 ------------------------------------------------------------
+-- 17. MÓDULO PUTAWAY (CONSULTIVO)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS putaway (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+    sku VARCHAR(100) NOT NULL,
+    sku_name VARCHAR(200),
+    quantity INT NOT NULL,
+    source_location VARCHAR(100),
+    target_location VARCHAR(100),
+    class_ VARCHAR(5) DEFAULT 'B',
+    operator_name VARCHAR(150),
+    task_status VARCHAR(50) DEFAULT 'em_processo',
+    travel_time_minutes INT DEFAULT 0,
+    handling_time_minutes INT DEFAULT 0,
+    total_time_minutes INT DEFAULT 0,
+    is_optimal_slot BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_putaway_tenant ON putaway(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_putaway_sku ON putaway(sku);
+CREATE INDEX IF NOT EXISTS idx_putaway_target ON putaway(target_location);
+CREATE INDEX IF NOT EXISTS idx_putaway_operator ON putaway(operator_name);
+
+------------------------------------------------------------
+-- MÓDULO PICKING (CONSULTIVO COMPLETO)
+------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS picking (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+
+    -- Dados operacionais
+    order_id VARCHAR(100) NOT NULL,
+    sku VARCHAR(100) NOT NULL,
+    sku_name VARCHAR(200),
+    quantity INT NOT NULL,
+    zone VARCHAR(50),
+    operator_name VARCHAR(150),
+
+    -- Métricas consultivas
+    picking_time_minutes INT DEFAULT 0,              -- tempo total da tarefa
+    travel_time_minutes INT DEFAULT 0,               -- deslocamento
+    handling_time_minutes INT DEFAULT 0,             -- manipulação
+    productivity_units_per_hour NUMERIC(10,2) DEFAULT 0,
+    error_rate NUMERIC(10,2) DEFAULT 0,              -- % de erros
+    divergence BOOLEAN DEFAULT FALSE,                -- houve divergência?
+    sla_compliance BOOLEAN DEFAULT TRUE,             -- SLA atendido?
+
+    picked_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_picking_tenant ON picking(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_picking_order ON picking(order_id);
+CREATE INDEX IF NOT EXISTS idx_picking_sku ON picking(sku);
+CREATE INDEX IF NOT EXISTS idx_picking_zone ON picking(zone);
+CREATE INDEX IF NOT EXISTS idx_picking_operator ON picking(operator_name);
+
+------------------------------------------------------------
 --  SEED DE KPIs
 ------------------------------------------------------------
 
