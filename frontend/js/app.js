@@ -1,8 +1,3 @@
-/**
- * Strategic Flow - Menu Funcional + API com DEBUG + FALLBACK + MULTI-TENANT SECURE
- * Arquivo Unificado e Corrigido contra Travamentos
- */
-
 class StrategicFlowAPI {
     constructor() {
         // Alinhado cirurgicamente com as portas e caminhos das APIs do backend
@@ -22,6 +17,7 @@ class StrategicFlowAPI {
         console.log('🚀 Strategic Flow iniciando...');
         this.setupNavigation();
         this.setupMenuCollapse();
+        this.setupSidebarToggle();
         this.connectWebSocket();
         this.initChart();
         this.fetchKPIs();
@@ -71,44 +67,36 @@ class StrategicFlowAPI {
         });
     }
 
-    // === MENU COLAPSÁVEL (SUBMENU) ===
-    setupMenuCollapse() {
-        console.log('🎛️ Configurando menus sanfona...');
+  // === MENU COLAPSÁVEL (SUBMENU) ===
+setupMenuCollapse() {
+    console.log('🎛️ Configurando menus sanfona...');
 
-        document.querySelectorAll('.category-header').forEach(header => {
-            header.addEventListener('click', (e) => {
-                e.preventDefault();
+    document.querySelectorAll('.category-header').forEach(header => {
+        header.addEventListener('click', () => {
 
-                const category = header.parentElement;
-                const isOpen = category.classList.contains('open');
+            // Garante que sempre pega o container correto
+            const category = header.closest('.menu-category');
+            if (!category) return;
 
-                // Fecha as outras categorias para manter a interface organizada
-                document.querySelectorAll('.menu-category').forEach(cat => {
-                    cat.classList.remove('open');
-                });
+            const isOpen = category.classList.contains('open');
 
-                // Se a categoria estava fechada, expande ela agora
-                if (!isOpen) {
-                    category.classList.add('open');
-                }
-
-                console.log(`🎛️ Menu: ${isOpen ? 'fechado' : 'aberto'}`);
+            // Fecha todas as categorias
+            document.querySelectorAll('.menu-category').forEach(cat => {
+                cat.classList.remove('open');
+                const h = cat.querySelector('.category-header');
+                if (h) h.classList.remove('open');
             });
+
+            // Abre somente a clicada
+            if (!isOpen) {
+                category.classList.add('open');
+                header.classList.add('open');
+            }
+
+            console.log(`📂 Submenu: ${isOpen ? 'fechado' : 'aberto'}`);
         });
-    }
-
-    // === SIDEBAR COLAPSO (ÍCONES-ONLY) ===
-    setupSidebarToggle() {
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('menu-toggle');
-
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('collapsed');
-                console.log('🔄 Sidebar alterada para: ' + (sidebar.classList.contains('collapsed') ? 'recolhida' : 'expandida'));
-            });
-        }
-    }
+    });
+}
 
     // === WEBSOCKET REALTIME ===
     connectWebSocket() {
@@ -150,6 +138,7 @@ class StrategicFlowAPI {
             this.startRESTFallback();
         }
     }
+
     updateStatus(status, text) {
         const indicator = document.getElementById('connection-indicator');
         const textEl = document.getElementById('connection-text');
@@ -170,7 +159,7 @@ class StrategicFlowAPI {
         this.fetchKPIs();
     }
 
-        // === FETCH ALL DATA ===
+    // === FETCH ALL DATA ===
     async fetchAllData() {
         console.log('📥 Sincronizando dados de todos os submódulos...');
         await this.fetchData('workflow-list', '/workflow');
@@ -178,14 +167,9 @@ class StrategicFlowAPI {
         await this.fetchData('kaizen-board', '/kaizen');
         await this.fetchData('crm-table', '/crm/companies'); 
         await this.fetchData('projects-table', '/projects');
-        
-        // ---> ADICIONADO AQUI: Ativa a carga real da matriz de alocação da equipe
         await this.fetchData('workforce-view', '/workforce/dashboard');
-        
-        // Ativa a carga real dos processos do Portal do Cliente
         await this.fetchData('client-portal-view', '/portal/my-processes');
     }
-
 
     async fetchData(elementId, endpoint) {
         try {
@@ -296,7 +280,8 @@ class StrategicFlowAPI {
         };
         this.updateKPIs(mock);
     }
-        // === CHART.JS REALTIME (CORRIGIDO E SEGURO CONTRA TRAVAMENTOS) ===
+
+    // === CHART.JS REALTIME ===
     initChart() {
         const canvas = document.getElementById('realtime-chart');
         if (!canvas) return;
@@ -324,12 +309,10 @@ class StrategicFlowAPI {
     }
 
     updateChart() {
-        // Validação de segurança para evitar erros de nulos no console
         if (!this.chart || !this.kpis || this.kpis.cycleTime === null) return;
         
         const now = new Date().toLocaleTimeString();
         
-        // Remove leituras antigas para manter a rolagem do gráfico fluida
         if (this.chart.data.labels.length > 20) {
             this.chart.data.labels.shift();
             this.chart.data.datasets.forEach(d => d.data.shift());
@@ -337,7 +320,6 @@ class StrategicFlowAPI {
         
         this.chart.data.labels.push(now);
         
-        // CORREÇÃO CRÍTICA: Mapeamento cirúrgico dos índices, [1] e [2] das linhas do gráfico
         if (this.chart.data.datasets[0]) this.chart.data.datasets[0].data.push(this.kpis.cycleTime);
         if (this.chart.data.datasets[1]) this.chart.data.datasets[1].data.push(this.kpis.otif);
         if (this.chart.data.datasets[2]) this.chart.data.datasets[2].data.push(this.kpis.efficiency || 90.0);
@@ -345,7 +327,7 @@ class StrategicFlowAPI {
         this.chart.update();
     }
 
-    // === RENDERIZADORES DE INTERFACE (INTEGRADO E CORRIGIDO) ===
+    // === RENDERIZADORES DE INTERFACE ===
     renderData(elementId, data) {
         const el = document.getElementById(elementId);
         if (!el || !data) return;
@@ -399,8 +381,7 @@ class StrategicFlowAPI {
                         </tr>
                     `).join('')}
                 </tbody>`;
-     //renderData//
-                }         else if (elementId === 'workforce-view') {
+        } else if (elementId === 'workforce-view') {
             const consultores = Array.isArray(data) ? data : (data.consultants || []);
             if (!consultores.length) {
                 el.innerHTML = '<p style="color:#94a3b8; padding:20px; text-align:center;">Nenhum engenheiro alocado.</p>';
@@ -411,14 +392,10 @@ class StrategicFlowAPI {
                 <div style="margin-bottom:20px;">
                     <h4 style="margin:0; color:#1e293b;">Alocação de Engenheiros & Consultores de Processo</h4>
                 </div>
-                
-                <!-- Uso estrito das suas classes de estilo CSS enviadas -->
                 <div class="workforce-grid">
                     ${consultores.map(c => {
                         const utilizacao = c.taxa_utilizacao_percent || 0;
-                        // Define a cor de progresso usando o padrão das suas métricas
                         const corProgress = utilizacao >= 75 ? '#2ed573' : '#ff4757';
-                        
                         return `
                             <div class="workforce-card">
                                 <div class="workforce-card-header">
@@ -438,9 +415,7 @@ class StrategicFlowAPI {
                         `;
                     }).join('')}
                 </div>`;
-        }
-
-         else if (elementId === 'client-portal-view') {
+        } else if (elementId === 'client-portal-view') {
             const processos = data.processes || [];
             el.innerHTML = `
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; width:100%;">
@@ -454,80 +429,41 @@ class StrategicFlowAPI {
                     </div>
                     <div style="display:flex; flex-direction:column; background:white; padding:20px; border-radius:12px; border:1px solid #e2e8f0; height:350px;">
                         <h5><i class="fas fa-comments"></i> Chat Feedback</h5>
-                        <div id="portal-chat-history" style="flex:1; overflow-y:auto; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:15px;">
-                            <p style="color:#94a3b8; text-align:center; margin-top:80px;">Selecione um processo para carregar o histórico.</p>
-                        </div>
+                        <div id="portal-chat-history" style="flex:1; overflow-y:auto; padding:10px; background:#f8fafc; border-radius:8px; margin:10px 0;"></div>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="portal-message-input" placeholder="Feedback..." style="flex:1; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
-                            <button onclick="app.sendPortalComment()" style="background:#0D8ABC; color:white; border:none; padding:0 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+                            <input id="portal-chat-input" type="text" placeholder="Digite seu feedback..." style="flex:1; padding:10px; border:1px solid #d1d5db; border-radius:6px;" />
+                            <button onclick="app.sendPortalFeedback()" style="background:#3b82f6; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-send"></i></button>
                         </div>
                     </div>
                 </div>`;
-                
-        } else if (elementId.includes('table')) {
-            const rowsData = Array.isArray(data) ? data : [];
-            if (!rowsData.length) return;
-            const headers = Object.keys(rowsData[0]);
-            const rows = rowsData.map(r => `<tr>${headers.map(h => `<td>${r[h] !== null ? r[h] : '--'}</td>`).join('')}</tr>`).join('');
-            el.innerHTML = `<thead><tr>${headers.map(h => `<th>${h.toUpperCase()}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>`;
         }
     }
 
-    // === MÉTODOS AUXILIARES DO CHAT DO PORTAL ===
-    async loadProcessComments(idProcesso) {
-        this.activeProcessId = idProcesso;
-        try {
-            const res = await fetch(`${this.API_URL}/portal/comments/${idProcesso}`, { headers: this.getHeaders() });
-            const data = await res.json();
-            const historyEl = document.getElementById('portal-chat-history');
-            if (historyEl && data.comments) {
-                historyEl.innerHTML = data.comments.map(c => `
-                    <div style="margin-bottom:10px; background:white; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-                        <strong style="font-size:12px;">${c.usuario_nome}</strong>
-                        <p style="margin:5px 0 0 0; color:#334155; font-size:13px;">${c.mensagem}</p>
-                    </div>
-                `).join('');
-                historyEl.scrollTop = historyEl.scrollHeight;
-            }
-        } catch (err) {
-            console.error("Erro ao carregar chat:", err);
-        }
+   // === PORTAL DO CLIENTE - CHAT ===
+    loadProcessComments(processId) {
+        this.activeProcessId = processId;
+        console.log(`📩 Carregando chat do processo: ${processId}`);
+        this.fetchData('portal-chat-history', `/portal/process/${processId}/comments`);
     }
 
-    async sendPortalComment() {
-        const input = document.getElementById('portal-message-input');
-        if (!input || !input.value.trim() || !this.activeProcessId) return;
-        try {
-            const res = await fetch(`${this.API_URL}/portal/comments`, {
-                method: 'POST',
-                headers: this.getHeaders(),
-                body: JSON.stringify({ id_processo: this.activeProcessId, mensagem: input.value.trim() })
-            });
-            if (res.ok) {
+    sendPortalFeedback() {
+        const input = document.getElementById('portal-chat-input');
+        const message = input.value.trim();
+        if (!message || !this.activeProcessId) return;
+
+        console.log(`💬 Enviando feedback: ${message}`);
+        fetch(`${this.API_URL}/portal/process/${this.activeProcessId}/feedback`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify({ message })
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
                 input.value = '';
                 this.loadProcessComments(this.activeProcessId);
             }
-        } catch (err) {
-            console.error("Erro ao enviar comentário:", err);
-        }
+        });
     }
-               
-               // === DARK MODE ===
-               setupDarkMode() {
-                const themeBtn = document.getElementById('theme-toggle');
-                if (!themeBtn) return;
-                
-                themeBtn.addEventListener('click', () => {
-                document.body.classList.toggle('dark');
-                const isDark = document.body.classList.contains('dark');
-                themeBtn.innerHTML = isDark ? '' : '';
-                console.log('🌙 Dark mode alterado.');});}}
-              
-               // // === BOOTSTRAP INITIALIZATION ===
+}
 
-               console.log('💡 Strategic Flow - DEBUG MODE ON');
-               const app = new StrategicFlowAPI();
-               
-               document.addEventListener("DOMContentLoaded", () => {
-                app.setupSidebarToggle();
-                app.setupDarkMode();});
+// Inicializar aplicação
+const app = new StrategicFlowAPI();

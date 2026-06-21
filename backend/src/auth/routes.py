@@ -1,22 +1,12 @@
 from aiohttp import web
-from .service import register_user, login_user
-
-
-def setup_auth_routes(app: web.Application):
-    app.router.add_post("/auth/register", register_handler)
-    app.router.add_post("/auth/login", login_handler)
-
-
-async def register_handler(request: web.Request):
+from core.security import create_access_token
+ADMIN_USER = {"email": "admin@strategicflow.com", "password": "admin123"}
+async def login(request: web.Request):
     data = await request.json()
-    user = await register_user(data)
-    return web.json_response({"user": user})
-
-
-async def login_handler(request: web.Request):
-    data = await request.json()
-    try:
-        token = await login_user(data)
+    if data.get("email") == ADMIN_USER["email"] and data.get("password") == ADMIN_USER["password"]:
+        token = create_access_token(sub=ADMIN_USER["email"], tenant_id="default", role="consultor")
         return web.json_response({"access_token": token})
-    except ValueError:
-        raise web.HTTPUnauthorized(text="Credenciais inválidas")
+    return web.json_response({"error": "Invalid"}, status=401)
+def setup_auth_routes(app: web.Application):
+    app.router.add_post("/api/v1/auth/login", login)
+    print("✅ Auth")

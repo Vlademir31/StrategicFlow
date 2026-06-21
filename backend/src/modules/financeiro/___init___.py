@@ -1,0 +1,1 @@
+from aiohttp import webdef register_finance_module(app: web.Application):    from .routes import setup_finance_routes    setup_finance_routes(app)    print("✅ Módulo Financeiro registrado: /api/v1/finance")

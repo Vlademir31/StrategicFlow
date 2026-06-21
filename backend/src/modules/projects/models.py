@@ -1,0 +1,1 @@
+# models.pyfrom dataclasses import dataclassfrom datetime import datetime@dataclassclass ProjectRecord:    id: int    tenant_id: str    name: str    description: str    status: str          # em_andamento, concluído, pendente    priority: str        # baixa, média, alta    start_date: datetime    end_date: datetime    budget: float    created_at: datetime    updated_at: datetime

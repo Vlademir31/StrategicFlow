@@ -1,0 +1,1 @@
+from pydantic import BaseModelfrom typing import Optional, Listfrom datetime import datetimeclass DashboardKpi(BaseModel):    name: str    value: float    unit: str    category: Optional[str] = "geral"class DashboardData(BaseModel):    kpis: List[DashboardKpi]    total_clients: int    total_opportunities: int    total_projects: int

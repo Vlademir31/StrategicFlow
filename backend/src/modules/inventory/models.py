@@ -1,0 +1,1 @@
+# models.pyfrom dataclasses import dataclassfrom datetime import datetime@dataclassclass InventoryRecord:    id: int    tenant_id: str    sku: str    sku_name: str    quantity_available: int    quantity_reserved: int    location: str    class_: str   # ABC classification    last_updated: datetime

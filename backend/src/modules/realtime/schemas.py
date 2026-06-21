@@ -1,0 +1,1 @@
+from pydantic import BaseModelfrom typing import Optionalfrom datetime import datetimeclass KpiUpdate(BaseModel):    name: str    value: float    unit: Optional[str] = ""    category: Optional[str] = "geral"class WebSocketEvent(BaseModel):    type: str    data: dict    timestamp: Optional[datetime] = None

@@ -1,0 +1,1 @@
+# models.pyfrom dataclasses import dataclassfrom datetime import datetime@dataclassclass PickingRecord:    id: int    tenant_id: str    order_id: str    sku: str    quantity: int    zone: str    productivity_units_per_hour: float    error_rate: float    picked_at: datetime

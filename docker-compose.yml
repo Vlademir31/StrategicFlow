@@ -1,6 +1,9 @@
+version: '3.9'
+
 services:
   db:
     image: postgres:18
+    container_name: strategic-flow-db
     environment:
       POSTGRES_USER: strategicflow
       POSTGRES_PASSWORD: strategicflow
@@ -14,21 +17,41 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - strategic-flow-network
+    restart: unless-stopped
 
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
+    container_name: strategic-flow-api
     environment:
       HOST: 0.0.0.0
       PORT: 8001
       DB_URL: postgresql://strategicflow:strategicflow@db:5432/strategicflow
       JWT_SECRET: super-secret-key
+      JWT_ALGORITHM: HS256
+      LOG_LEVEL: INFO
     ports:
       - "8001:8001"
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - backend_src:/app/src
+      - frontend:/app/frontend
+    networks:
+      - strategic-flow-network
+    restart: unless-stopped
+
+networks:
+  strategic-flow-network:
+    driver: bridge
 
 volumes:
   db_data:
+  backend_src:
+  frontend:
+
+  

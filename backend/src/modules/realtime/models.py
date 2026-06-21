@@ -1,0 +1,1 @@
+from dataclasses import dataclassfrom datetime import datetime@dataclassclass WebSocketKpi:    id: int    tenant_id: str    name: str    value: float    unit: str    category: str    timestamp: datetime@dataclassclass WebSocketMessage:    type: str    data: dict    timestamp: datetime
