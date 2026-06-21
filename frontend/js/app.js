@@ -47,16 +47,6 @@ class StrategicFlowAPI {
 
                 const section = item.dataset.section;
                 
-                if (section === "inventory") {
-    carregarInventory();
-}
-
-
-
-
-
-
-
                 if (!section) return;
 
                 console.log(`📍 Navegando para a seção: ${section}`);

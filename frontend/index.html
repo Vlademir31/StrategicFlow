@@ -329,40 +329,78 @@
             </div>
         </div>
 
-        <!-- SEÇÃO: RECEBIMENTO -->
-        <div id="receiving" class="section-block">
-            <div class="dashboard-grid receiving-grid">
-                <div class="kpi-card kpi-card-blue">
-                    <div class="kpi-header">
-                        <i class="fas fa-stopwatch kpi-icon-blue"></i>
-                        <span class="kpi-title">Tempo Médio de Descarga</span>
-                    </div>
-                    <div class="kpi-value"><span class="value" id="rec-avg-time">0 min</span></div>
-                    <div class="kpi-target">Meta NR 11: < 45 min</div>
-                </div>
-                <div class="kpi-card kpi-card-green">
-                    <div class="kpi-header">
-                        <i class="fas fa-boxes kpi-icon-green"></i>
-                        <span class="kpi-title">Divergência de Conferência</span>
-                    </div>
-                    <div class="kpi-value"><span class="value" id="rec-error-rate">0.0%</span></div>
-                    <div class="kpi-target">Meta Conferência Cega: 0%</div>
-                </div>
-            </div>
+       <!-- SEÇÃO: RECEIVING (CONSULTIVO) -->
+<div id="receiving" class="section">
+    <h2>Recebimento (Consultivo)</h2>
 
-            <div class="receiving-container">
-                <div class="receiving-header">
-                    <h3><i class="fas fa-th-list receiving-header-icon"></i> Monitoramento de Docas de Recebimento</h3>
-                    <button onclick="app.fetchData('receiving-table', '/receiving')" class="receiving-button">
-                        <i class="fas fa-sync"></i> Atualizar API
-                    </button>
-                </div>
-                <div id="receiving-table" class="receiving-table">
-                    <p class="receiving-loading">Carregando dados...</p>
-                </div>
-            </div>
+    <!-- Ações -->
+    <div class="actions">
+        <button onclick="carregarReceivingConsultivo()">Atualizar Dados</button>
+        <button onclick="exportarReceivingCSV()">Exportar CSV Consultivo</button>
+    </div>
+
+    <!-- KPIs CONSULTIVOS -->
+    <div id="receiving-kpis" class="kpi-container">
+        <div class="kpi-card">
+            <span id="kpi-rec-tempo-medio">0 min</span>
+            <label>Tempo Médio de Recebimento</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-rec-divergencia">0%</span>
+            <label>Divergência de Conferência</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-rec-produtividade">0 u/h</span>
+            <label>Produtividade Média por Operador</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-rec-gargalos">0</span>
+            <label>Docas com Gargalo</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-rec-sla">0%</span>
+            <label>SLA de Recebimento</label>
         </div>
     </div>
+
+    <!-- ALERTAS INTELIGENTES -->
+    <div id="receiving-alerts" class="alert-box"></div>
+
+    <!-- INSIGHTS AUTOMÁTICOS -->
+    <div id="receiving-insights" class="insights-box">
+        <h3>Insights Automáticos</h3>
+        <ul id="receiving-insights-list"></ul>
+    </div>
+
+    <!-- GRÁFICOS CONSULTIVOS -->
+    <div id="receiving-charts" class="charts-container">
+        <canvas id="chartReceivingTempo"></canvas>
+        <canvas id="chartReceivingDivergencia"></canvas>
+        <canvas id="chartReceivingOperadores"></canvas>
+        <canvas id="chartReceivingDocas"></canvas>
+    </div>
+
+    <!-- TABELA CONSULTIVA -->
+    <table>
+        <thead>
+        <tr>
+            <th>NF</th>
+            <th>SKU</th>
+            <th>Esperado</th>
+            <th>Recebido</th>
+            <th>Divergência</th>
+            <th>Operador</th>
+            <th>Doca</th>
+            <th>Tempo Total</th>
+            <th>SLA</th>
+            <th>Data</th>
+        </tr>
+        </thead>
+        <tbody id="tabela-receiving"></tbody>
+    </table>
+</div>
+
+    
     <!--SEÇÃO: PUTAWAY-->
 
     <!--SEÇÃO: PICKING-->
@@ -372,75 +410,133 @@
     <!--SEÇÃO: EXPEDIÇÃO-->
 
     <!--SEÇÃO: INVENTORY-->
-    <section id="inventory" class="content-section" style="display:none;">
-    <h2>Controle de Estoque</h2>
+<div id="inventory" class="section">
+    <h2>Controle de Estoque (Consultivo)</h2>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>SKU</th>
-                <th>Nome</th>
-                <th>Disponível</th>
-                <th>Reservado</th>
-                <th>Local</th>
-                <th>Classe</th>
-            </tr>
-        </thead>
-        <tbody id="tabela-inventory"></tbody>
-    </table>
-</section>
+    <!-- Ações -->
+    <div class="actions">
+        <button onclick="carregarInventoryConsultivo()">Atualizar Dados</button>
+        <button onclick="exportarInventoryCSV()">Exportar CSV Consultivo</button>
+    </div>
 
+    <!-- KPIs CONSULTIVOS -->
+    <div id="inventory-kpis" class="kpi-container">
+        <div class="kpi-card">
+            <span id="kpi-total-valor">R$ 0,00</span>
+            <label>Valor Total do Estoque</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-estoque-parado">0</span>
+            <label>SKUs com Estoque Parado (&gt; 90 dias)</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-risco-ruptura">0</span>
+            <label>SKUs com Risco de Ruptura</label>
+        </div>
+        <div class="kpi-card">
+            <span id="kpi-excesso">0</span>
+            <label>SKUs com Excesso de Estoque</label>
+        </div>
+    </div>
 
-    <!--SEÇÃO: SLOTTING ABC-->
+    <!-- ALERTAS INTELIGENTES -->
+<div id="inventory-alerts" class="alert-box"></div>
 
-    <!--SEÇÃO: CRM +  CLINETES -->
+<!-- INSIGHTS AUTOMÁTICOS -->
+<div id="inventory-insights" class="insights-box">
+    <h3>Insights Automáticos</h3>
+    <ul id="insights-list"></ul>
+</div>
 
-    <!--SEÇÃO: CLIENT PORTAL-->
+<!-- GRÁFICOS CONSULTIVOS -->
+<div id="inventory-charts" class="charts-container">
+    <canvas id="chartABC"></canvas>
+    <canvas id="chartAging"></canvas>
+    <canvas id="chartCobertura"></canvas>
+</div>
 
-    <!--SEÇÃO: WORKFORCE-->
+<!-- TABELA CONSULTIVA -->
+<table>
+    <thead>
+    <tr>
+        <th>SKU</th>
+        <th>Nome</th>
+        <th>Disponível</th>
+        <th>Reservado</th>
+        <th>Local</th>
+        <th>Classe</th>
+        <th>Aging (dias)</th>
+        <th>Cobertura (dias)</th>
+        <th>Risco de Ruptura</th>
+        <th>Excesso</th>
+        <th>Valor do Estoque</th>
+    </tr>
+    </thead>
+    <tbody id="tabela-inventory"></tbody>
+</table>
+</div>
 
-    <!--SEÇÃO: GESTÃO DE PROJETOS -->
+<!-- SEÇÕES FUTURAS -->
+<!--SEÇÃO: SLOTTING ABC-->
+<!--SEÇÃO: CRM + CLIENTES -->
+<!--SEÇÃO: CLIENT PORTAL-->
+<!--SEÇÃO: WORKFORCE-->
+<!--SEÇÃO: GESTÃO DE PROJETOS -->
+<!--SEÇÃO: DIAGNÓSTICOS OPERACIONAIS-->
+<!--SEÇÃO: TEMPLATES & CHECKLISTS-->
+<!--SEÇÃO: RELATÓRIOS EXECUTIVOS-->
+<!--SEÇÃO: PDCA CYCLE-->
+<!--SEÇÃO: WORKFLOW & GOVERNANÇA-->
+<!--SEÇÃO: BPMN MAPEAMENTO-->
+<!--SEÇÃO: VSM / SWIMLANE-->
+<!--SEÇÃO: KAIZEN IMPROVEMENT-->
+<!--SEÇÃO: 5S DIGITAL-->
+<!--SEÇÃO: LEAN MONITORAMENTO-->
+<!--SEÇÃO: SIX SIGMA DMAIC-->
+<!--SEÇÃO: QUALIDADE & GOVERNANCE-->
+<!--SEÇÃO: BI & ANALYTICS-->
+<!--SEÇÃO: AUTOMAÇÃO-->
+<!--SEÇÃO: INTEGRAÇÃO (ERP / WMS)-->
+<!--SEÇÃO: NOTIFICAÇÕES-->
+<!--SEÇÃO: SEGURANÇA-->
 
-    <!--SEÇÃO: DIAGNÓSTICOS OPERACIONAIS-->
+</div> <!-- fecha main-content -->
+</div> <!-- fecha wrapper -->
 
-    <!--SEÇÃO: TEMPLATES & CHECKLISTS-->
+<footer>
+    <p>© 2026 | Strategic Flow - Warehousing & Process Consulting | Araquari - SC</p>
+</footer>
 
-    <!--SEÇÃO: RELATÓRIOS EXECUTIVOS-->
-
-    <!--SEÇÃO: PDCA CYCLE-->
-
-     <!--SEÇÃO: WORFLOW & GOVERNANÇA-->
-
-    <!--SEÇÃO: BPMN MAPEAMENTO-->
-
-    <!--SEÇÃO: VSM / SWIMLANE-->
-
-    <!--SEÇÃO: KAIZEN IMPROVEMENT-->
-
-    <!--SEÇÃO: 5S DIGITAL-->
-
-    <!--SEÇÃO: LEAN MONITORAMENTO-->
-
-    <!--SEÇÃO: SIX SIGMA DAMIC-->
-
-    <!--SEÇÃO: QUALIDADE & GOVERNACE-->
-
-    <!--SEÇÃO: BI & ANALYTICS-->
-
-    <!--SEÇÃO: AUTOMAÇÃO-->
-
-    <!--SEÇÃO: INTEGRAÇÃO(ERP / WMS)-->
-
-    <!--SEÇÃO: NOTIFICAÇÕES-->
-
-    <!--SEÇÃO: SEGURANÇA-->
-
-   
-    <footer>
-        <p>© 2026 | Strategic Flow - Warehousing & Process Consulting | Araquari - SC</p>
-    </footer>
-    <script src="js/app.js" defer></script>
-    <script src="js/inventory.js"></script>
+<script src="js/app.js" defer></script>
+<script src="js/inventory.js"></script>
+<script src="js/receiving.js"></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
+<script src=""></script>
 
 </body>
 </html>

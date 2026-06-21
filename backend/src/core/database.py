@@ -771,7 +771,7 @@ CREATE INDEX IF NOT EXISTS idx_templates_tenant ON templates(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_templates_category ON templates(category);
 
 ------------------------------------------------------------
---  15. MÓDULO INVENTORY
+--  15. MÓDULO INVENTORY (CONSULTIVO)
 ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS inventory (
@@ -783,12 +783,106 @@ CREATE TABLE IF NOT EXISTS inventory (
     quantity_reserved INT NOT NULL DEFAULT 0,
     location VARCHAR(100),
     class_ VARCHAR(5) NOT NULL DEFAULT 'B',
+    -- CONSULTIVO
+    unit_cost NUMERIC(10,2) DEFAULT 0,              -- custo unitário
+    avg_daily_consumption NUMERIC(10,2) DEFAULT 0,  -- consumo médio diário
+    safety_stock INT DEFAULT 0,                     -- estoque de segurança
+    max_stock INT DEFAULT 0,                        -- estoque máximo
+    last_movement TIMESTAMP WITH TIME ZONE,         -- última movimentação
     last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_inventory_tenant ON inventory(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_sku ON inventory(sku);
+
+------------------------------------------------------------
+-- 16. MÓDULO RECEIVING (CONSULTIVO COMPLETO)
+------------------------------------------------------------
+
+------------------------------------------------------------
+-- 16.1) TABELA PRINCIPAL: RECEIVING (DADOS OPERACIONAIS)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS receiving (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+    nf_number VARCHAR(100) NOT NULL,
+    sku VARCHAR(100) NOT NULL,
+    sku_name VARCHAR(200),
+    quantity_expected INT NOT NULL,
+    quantity_received INT NOT NULL DEFAULT 0,
+    status VARCHAR(50) NOT NULL DEFAULT 'em_processo',
+    cycle_time_hours NUMERIC(10,2),
+    operator_name VARCHAR(150),
+    dock_number VARCHAR(50),
+    -- CONSULTIVO
+    divergence_rate NUMERIC(10,2) DEFAULT 0,          -- % divergência
+    waiting_time_minutes INT DEFAULT 0,               -- tempo parado na doca
+    unloading_time_minutes INT DEFAULT 0,             -- tempo de descarga
+    checking_time_minutes INT DEFAULT 0,              -- tempo de conferência
+    sla_compliance BOOLEAN DEFAULT TRUE,              -- SLA atendido?
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_receiving_tenant ON receiving(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_receiving_nf ON receiving(nf_number);
+CREATE INDEX IF NOT EXISTS idx_receiving_sku ON receiving(sku);
+CREATE INDEX IF NOT EXISTS idx_receiving_dock ON receiving(dock_number);
+
+------------------------------------------------------------
+-- 16.2) TABELA DE EVENTOS: RECEIVING_EVENTS (CONSULTIVO)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS receiving_events (
+    id SERIAL PRIMARY KEY,
+    receiving_id INT NOT NULL REFERENCES receiving(id) ON DELETE CASCADE,
+    event_type VARCHAR(100) NOT NULL,
+    event_timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    notes TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_receiving_events_receiving ON receiving_events(receiving_id);
+CREATE INDEX IF NOT EXISTS idx_receiving_events_type ON receiving_events(event_type);
+
+------------------------------------------------------------
+-- 16.3) TABELA DE DOCAS: RECEIVING_DOCKS (CAPACIDADE & GARGALOS)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS receiving_docks (
+    id SERIAL PRIMARY KEY,
+    dock_number VARCHAR(50) NOT NULL,
+    capacity_per_hour INT NOT NULL DEFAULT 50,
+    active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_receiving_docks_number ON receiving_docks(dock_number);
+
+------------------------------------------------------------
+-- 16.4) TABELA DE OPERADORES: RECEIVING_OPERATORS (PRODUTIVIDADE)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS receiving_operators (
+    id SERIAL PRIMARY KEY,
+    operator_name VARCHAR(150) NOT NULL,
+    hourly_cost NUMERIC(10,2) DEFAULT 0,
+    active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_receiving_operators_name ON receiving_operators(operator_name);
+
+------------------------------------------------------------
+-- 16.5) TABELA DE CACHE DE KPIs: RECEIVING_KPI_CACHE (PERFORMANCE)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS receiving_kpi_cache (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+    kpi_date DATE NOT NULL,
+    avg_cycle_time NUMERIC(10,2),
+    divergence_rate NUMERIC(10,2),
+    operator_productivity NUMERIC(10,2),
+    dock_utilization NUMERIC(10,2),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_receiving_kpi_cache_tenant ON receiving_kpi_cache(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_receiving_kpi_cache_date ON receiving_kpi_cache(kpi_date);
 
 ------------------------------------------------------------
 --  SEED DE KPIs
