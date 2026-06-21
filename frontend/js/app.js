@@ -46,9 +46,21 @@ class StrategicFlowAPI {
                 e.preventDefault();
 
                 const section = item.dataset.section;
+                
+                if (section === "inventory") {
+    carregarInventory();
+}
+
+
+
+
+
+
+
                 if (!section) return;
 
                 console.log(`📍 Navegando para a seção: ${section}`);
+                
 
                 // Remove as classes de ativo de todas as abas e painéis
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));

@@ -771,6 +771,26 @@ CREATE INDEX IF NOT EXISTS idx_templates_tenant ON templates(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_templates_category ON templates(category);
 
 ------------------------------------------------------------
+--  15. MÓDULO INVENTORY
+------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS inventory (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+    sku VARCHAR(100) NOT NULL,
+    sku_name VARCHAR(200),
+    quantity_available INT NOT NULL DEFAULT 0,
+    quantity_reserved INT NOT NULL DEFAULT 0,
+    location VARCHAR(100),
+    class_ VARCHAR(5) NOT NULL DEFAULT 'B',
+    last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_inventory_tenant ON inventory(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_inventory_sku ON inventory(sku);
+
+------------------------------------------------------------
 --  SEED DE KPIs
 ------------------------------------------------------------
 
