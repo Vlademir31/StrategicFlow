@@ -37,14 +37,14 @@
                     <span>Warehouse Operacional</span>
                 </div>
                 <div id="submenu-warehouse" class="category-items">
-                    <a href="#" class="nav-item" data-section="receiving"><i class="fas fa-truck"></i><span>Recebimento</span></a>
+                    <a href="#" class="nav-item" data-section="receiving"><i class="fas fa-truck"></i><span>Receiving</span></a>
                     <a href="#" class="nav-item" data-section="putaway"><i class="fas fa-box"></i><span>Putaway</span></a>
                     <a href="#" class="nav-item" data-section="picking"><i class="fas fa-hand-paper"></i><span>Picking</span></a>
-                    <a href="#" class="nav-item" data-section="packing"><i class="fas fa-boxes"></i><span>Embalagem</span></a>
-                    <a href="#" class="nav-item" data-section="expedition"><i class="fas fa-truck-loading"></i><span>Expedição</span></a>
+                    <a href="#" class="nav-item" data-section="packing"><i class="fas fa-boxes"></i><span>Packing</span></a>
+                    <a href="#" class="nav-item" data-section="expedition"><i class="fas fa-truck-loading"></i><span>Shipping</span></a>
                     <a href="#" class="nav-item" data-section="inventory"><i class="fas fa-list-alt"></i><span>Inventory</span></a>
                     <a href="#" class="nav-item" data-section="slotting"><i class="fas fa-map-marked-alt"></i><span>Slotting ABC</span></a>
-                    <a href="#" class="nav-item" data-section="layout"><i class="fas fa-drafting-compass"></i><span>Layout de Armazém</span></a>
+                    <a href="#" class="nav-item" data-section="layout"><i class="fas fa-drafting-compass"></i><span>Warehouse Layout</span></a>
                 </div>
             </div>
 
@@ -634,9 +634,178 @@
 
 </div>
 
-    <!--SEÇÃO: EMBALAGEM-->
+   <!-- ============================= -->
+<!-- SEÇÃO: PACKING (CONSULTIVO) -->
+<!-- ============================= -->
+<div id="packing" class="section">
 
-    <!--SEÇÃO: EXPEDIÇÃO-->
+    <h2><i class="fas fa-tape"></i> Packing (Consultivo)</h2>
+
+    <div class="actions">
+        <button onclick="carregarPackingConsultivo()">
+            <i class="fas fa-sync"></i> Atualizar Dados
+        </button>
+        <button onclick="exportarPackingCSV()">
+            <i class="fas fa-file-csv"></i> Exportar CSV Consultivo
+        </button>
+    </div>
+
+    <div id="packing-kpis" class="kpi-container">
+        <div class="kpi-card kpi-card-blue">
+            <span id="kpi-pack-avg-time">0 min</span>
+            <label>Tempo Médio de Packing</label>
+        </div>
+        <div class="kpi-card kpi-card-red">
+            <span id="kpi-pack-error-rate">0%</span>
+            <label>Taxa Média de Erro</label>
+        </div>
+        <div class="kpi-card kpi-card-yellow">
+            <span id="kpi-pack-damage-rate">0%</span>
+            <label>Taxa de Danos</label>
+        </div>
+        <div class="kpi-card kpi-card-purple">
+            <span id="kpi-pack-reworks">0</span>
+            <label>Retrabalhos</label>
+        </div>
+        <div class="kpi-card kpi-card-green">
+            <span id="kpi-pack-sla">0%</span>
+            <label>SLA de Packing</label>
+        </div>
+    </div>
+
+    <div id="packing-alerts" class="alert-box"></div>
+
+    <div id="packing-insights" class="insights-box">
+        <h3><i class="fas fa-lightbulb"></i> Insights Automáticos</h3>
+        <ul id="packing-insights-list"></ul>
+    </div>
+
+    <div id="packing-charts" class="charts-container">
+        <div class="chart-card">
+            <h4>Tempo por Estação</h4>
+            <canvas id="chartPackingTempo"></canvas>
+        </div>
+        <div class="chart-card">
+            <h4>Erros por SKU</h4>
+            <canvas id="chartPackingErros"></canvas>
+        </div>
+        <div class="chart-card">
+            <h4>Danos por Tipo de Embalagem</h4>
+            <canvas id="chartPackingDamage"></canvas>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="consult-table">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>SKU</th>
+                    <th>Nome</th>
+                    <th>Qtd</th>
+                    <th>Tipo</th>
+                    <th>Operador</th>
+                    <th>Estação</th>
+                    <th>Tempo (min)</th>
+                    <th>Erro (%)</th>
+                    <th>Danos (%)</th>
+                    <th>Retrabalho</th>
+                    <th>SLA</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-packing">
+                <tr><td colspan="13">Carregando análise consultiva...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!--SEÇÃO: shipping-->
+   <div id="shipping" class="section">
+
+    <h2><i class="fas fa-truck"></i> Expedição (Consultivo)</h2>
+
+    <div class="actions">
+        <button onclick="carregarShippingConsultivo()"><i class="fas fa-sync"></i> Atualizar</button>
+        <button onclick="exportarShippingCSV()"><i class="fas fa-file-csv"></i> Exportar CSV</button>
+    </div>
+
+    <div id="shipping-kpis" class="kpi-container">
+        <div class="kpi-card kpi-card-blue">
+            <span id="kpi-ship-expedition">0 min</span>
+            <label>Tempo Médio de Expedição</label>
+        </div>
+        <div class="kpi-card kpi-card-yellow">
+            <span id="kpi-ship-waiting">0 min</span>
+            <label>Tempo Médio de Espera</label>
+        </div>
+        <div class="kpi-card kpi-card-red">
+            <span id="kpi-ship-damage">0%</span>
+            <label>Taxa de Danos</label>
+        </div>
+        <div class="kpi-card kpi-card-purple">
+            <span id="kpi-ship-reworks">0</span>
+            <label>Retrabalhos</label>
+        </div>
+        <div class="kpi-card kpi-card-green">
+            <span id="kpi-ship-sla">0%</span>
+            <label>SLA de Expedição</label>
+        </div>
+    </div>
+
+    <div id="shipping-alerts" class="alert-box"></div>
+
+    <div id="shipping-insights" class="insights-box">
+        <h3><i class="fas fa-lightbulb"></i> Insights Automáticos</h3>
+        <ul id="shipping-insights-list"></ul>
+    </div>
+
+    <div id="shipping-charts" class="charts-container">
+        <div class="chart-card">
+            <h4>Tempo por Transportadora</h4>
+            <canvas id="chartShippingCarrier"></canvas>
+        </div>
+        <div class="chart-card">
+            <h4>Danos por SKU</h4>
+            <canvas id="chartShippingDamage"></canvas>
+        </div>
+        <div class="chart-card">
+            <h4>Tempo de Espera por Dia</h4>
+            <canvas id="chartShippingWait"></canvas>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="consult-table">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>SKU</th>
+                    <th>Nome</th>
+                    <th>Qtd</th>
+                    <th>Transportadora</th>
+                    <th>Tracking</th>
+                    <th>Veículo</th>
+                    <th>Motorista</th>
+                    <th>Expedição</th>
+                    <th>Espera</th>
+                    <th>Danos</th>
+                    <th>Retrabalho</th>
+                    <th>SLA</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-shipping">
+                <tr><td colspan="14">Carregando análise consultiva...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
 
     <!--SEÇÃO: INVENTORY-->
 <div id="inventory" class="section">
@@ -706,7 +875,7 @@
 </table>
 </div>
 
-<!-- SEÇÕES FUTURAS -->
+
 <!--SEÇÃO: SLOTTING ABC-->
 <!--SEÇÃO: CRM + CLIENTES -->
 <!--SEÇÃO: CLIENT PORTAL-->
@@ -740,22 +909,22 @@
 <script src="js/app.js" defer></script>
 <script src="js/inventory.js"></script>
 <script src="js/receiving.js"></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
-<script src=""></script>
+<script src="js/picking.js"></script>
+<script src="js/putaway.js"></script>
+<script src="js/ClientPortal.js"></script>
+<script src="js/CRM+Clientes.js"></script>
+<script src="js/diagnosticosOperacionais.js"></script>
+<script src="js/shipping.js"></script>
+<script src="js/gestaodeprojetos.js"></script>
+<script src="js/layoutdeArmazem.js"></script>
+<script src="js/packing.js"></script>
+<script src="js/PDCAcycle.js"></script>
+<script src="js/receiving.js"></script>
+<script src="js/relatoriosExecutivos.js"></script>
+<script src="js/slottingABC.js"></script>
+<script src="js/templates&Checklist.js"></script>
+<script src="js/workflow&governanca.js"></script>
+<script src="js/workforce.js"></script>
 <script src=""></script>
 <script src=""></script>
 <script src=""></script>

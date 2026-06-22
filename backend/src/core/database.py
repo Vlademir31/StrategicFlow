@@ -911,7 +911,7 @@ CREATE INDEX IF NOT EXISTS idx_putaway_target ON putaway(target_location);
 CREATE INDEX IF NOT EXISTS idx_putaway_operator ON putaway(operator_name);
 
 ------------------------------------------------------------
--- MÓDULO PICKING (CONSULTIVO COMPLETO)
+-- 18. MÓDULO PICKING (CONSULTIVO COMPLETO)
 ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS picking (
@@ -944,6 +944,73 @@ CREATE INDEX IF NOT EXISTS idx_picking_order ON picking(order_id);
 CREATE INDEX IF NOT EXISTS idx_picking_sku ON picking(sku);
 CREATE INDEX IF NOT EXISTS idx_picking_zone ON picking(zone);
 CREATE INDEX IF NOT EXISTS idx_picking_operator ON picking(operator_name);
+
+------------------------------------------------------------
+--  19. módulo packing (CONSULTIVO COMPLETO)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS packing (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+
+    order_id VARCHAR(100) NOT NULL,
+    sku VARCHAR(100) NOT NULL,
+    sku_name VARCHAR(200),
+    quantity INT NOT NULL,
+
+    packing_type VARCHAR(50),          -- caixa, envelope, pallet
+    operator_name VARCHAR(150),
+    station VARCHAR(50),
+
+    packing_time_minutes INT DEFAULT 0,
+    error_rate NUMERIC(10,2) DEFAULT 0,
+    damage_rate NUMERIC(10,2) DEFAULT 0,
+    rework BOOLEAN DEFAULT FALSE,
+    sla_compliance BOOLEAN DEFAULT TRUE,
+
+    packed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_packing_tenant ON packing(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_packing_order ON packing(order_id);
+CREATE INDEX IF NOT EXISTS idx_packing_sku ON packing(sku);
+CREATE INDEX IF NOT EXISTS idx_packing_operator ON packing(operator_name);
+CREATE INDEX IF NOT EXISTS idx_packing_station ON packing(station);
+
+------------------------------------------------------------
+--  20. módulo packing (CONSULTIVO COMPLETO)
+------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS shipping (
+    id SERIAL PRIMARY KEY,
+    tenant_id VARCHAR(50) NOT NULL,
+
+    order_id VARCHAR(100) NOT NULL,
+    sku VARCHAR(100) NOT NULL,
+    sku_name VARCHAR(200),
+    quantity INT NOT NULL,
+
+    carrier VARCHAR(100),               -- transportadora
+    tracking_code VARCHAR(150),
+    vehicle_type VARCHAR(50),           -- van, truck, carreta
+    driver_name VARCHAR(150),
+
+    expedition_time_minutes INT DEFAULT 0,
+    loading_time_minutes INT DEFAULT 0,
+    waiting_time_minutes INT DEFAULT 0,
+
+    error_rate NUMERIC(10,2) DEFAULT 0,
+    damage_rate NUMERIC(10,2) DEFAULT 0,
+    rework BOOLEAN DEFAULT FALSE,
+    sla_compliance BOOLEAN DEFAULT TRUE,
+
+    shipped_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_shipping_tenant ON shipping(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_shipping_order ON shipping(order_id);
+CREATE INDEX IF NOT EXISTS idx_shipping_sku ON shipping(sku);
+CREATE INDEX IF NOT EXISTS idx_shipping_carrier ON shipping(carrier);
 
 ------------------------------------------------------------
 --  SEED DE KPIs
